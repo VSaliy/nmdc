@@ -1,0 +1,566 @@
+
+<!-- saved from url=(0039)http://mutor.no-ip.com:413/protocol.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Direct Connect Protocol Documentation</title><style type="text/css"></style></head><body text="#000000" link="#333333" vlink="#999999" alink="#FF0000">
+<a name="NavBar"></a><a name="Introduction"></a>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tbody><tr>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#ClienttoClientHandShake">C2C<br>
+        Handshake</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#ClienttoServerLogin">C2S<br>
+        Login</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#ServertoHubRegistrationServer">S2RS<br>
+        Registration</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesclienttoclient">C2C<br>
+        TCP Commands</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#UDPClientToClientCommands">C2C<br>
+        UDP Commands</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesclienttoserver">C2S<br>
+        Commands</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesservertoserver">S2S<br>
+        Commands</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesservertoserver">P2S<br>
+        Commands</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#AppendixA">Appendix A<br>
+        Lock To Key</a></font></div>
+    </td>
+    <td width="10%">
+      <div align="center"><font size="1"><a href="http://mutor.no-ip.com:413/protocol.htm#AppendixB">Appendix B<br>
+        Create A Lock</a></font></div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="10">
+      <hr align="center">
+      <div align="center"><font size="1">C = Client&nbsp;&nbsp;&nbsp;S = Server(Hub)&nbsp;&nbsp;&nbsp;RS = Registration Server&nbsp;&nbsp;&nbsp;P = Pinger</font></div>
+    </td>
+  </tr>
+</tbody></table>
+<h2>Introduction</h2><p><font size="2">This protocol documentation has been compiled from various 
+sources in hopes of creating a more complete Direct Connect protocol reference.</font></p><ul><font size="2">Version 1.4.1
+<br>Last File Update 08/28/08</font><br><font size="1"><a href="javascript:alert('9/18/04 Page edited by Mutor for format, not content.\n8/27/08 Revisited, added content.');">
+Edited by Mutor</a></font></ul><font size="2">The following users have contributed to this file.<br>
+<br><b>Sid, aDe, Sedulus, David Marwood, Suxxx, Stefan Gorling, Sphinx, HaArD, CrazyGuy &amp; Mutor</b></font><p><font size="2">
+The Direct Connect network is composed of<i>Hubs</i>,<i>Clients</i>, and the<i>HubListServer</i>. Hubs listen on TCP port 411 
+and allow many clients to connect and exchange commands such as searches and chat messages. Essentially, hubs are a naming 
+service and communication facilitator for clients. Clients store files and respond to searches against those files. The 
+HubListServer acts as a naming service for all the hubs. All hubs register with the HubListServer and clients discover 
+hubs by asking the HubListServer. Clients are run by users, each of whom has a nick (aka username).</font></p><p>
+<font size="2">The TCP data is a series of commands, each in the form of,</font></p><ul><font size="2">
+&lt;command&gt;|</font></ul><p><font size="2">The| indicates the end of a command and is
+ not followed by a newline.</font></p><font size="2">Certain users are designated as<i>Ops</i> by the hub and are able to 
+ issue certain commands not available to other users.</font><hr><a name="Contents"></a><br><b><a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Table Of Contents</a>
+ </b><br><br><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction"><b>Introduction</b></a> -- Introduction<br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#ClienttoClientHandShake"><b>Client2Client_Handshake</b></a> -- Client to Client HandShake<ul><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#MyNick">$MyNick</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#Direction">$Direction</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#Send">$Send</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#DownloadExample">Download Example</a></font></li></ul>
+<a href="http://mutor.no-ip.com:413/protocol.htm#ClienttoServerLogin"><b>Client2Server_Login</b></a> -- Client to Server Login<ul><li>
+<a href="http://mutor.no-ip.com:413/protocol.htm#LoginExample"><font size="2">Hub Login Example</font></a></li></ul><a href="http://mutor.no-ip.com:413/protocol.htm#ServertoHubRegistrationServer">
+<b>Server2RegServer_HubRegistration</b></a> -- Server to Hub Registration Server Communication<br><ul><li>
+<a href="http://mutor.no-ip.com:413/protocol.htm#Lock"><font size="2">$Lock</font></a></li><li><a href="http://mutor.no-ip.com:413/protocol.htm#Key"><font size="2">$Key</font></a></li><li><a href="http://mutor.no-ip.com:413/protocol.htm#HubRegistrationExample">
+<font size="2">Hub Registration Example</font></a></li></ul><a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesclienttoclient"><b>Client2Client Command_Types</b></a> -- Command Types (client to client)<br>
+<ul><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#GetListLen">$GetListLen</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#MaxedOut">$MaxedOut</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#Error">$Error</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#Get">$Get</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#FileLength">$FileLength</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#Canceled">$Canceled</a></font></li></ul><b><a href="http://mutor.no-ip.com:413/protocol.htm#UDPClientToClientCommands">UDP Client To Client Commands</a></b><ul><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#SR">$SR</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#Ping">$Ping</a></font></li></ul>
+<a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesclienttoserver"><b>Command_Types_(client_to_server)</b></a> -- Command Types (client to server)
+<ul><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#Hello">$Hello</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#GetNickList">$GetNickList</a></font>
+</li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#MyINFO">$MyINFO</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#GetINFO">$GetINFO</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#ConnectToMe">$ConnectToMe</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#MultiConnectToMe">$MultiConnectToMe</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#RevConnectToMe">$RevConnectToMe</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#To">$To</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#Quit">$Quit</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#OpForceMove">$OpForceMove</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#Kick">$Kick</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#SearchActiveclients">$Search (Active Clients)</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#SearchPassiveclients">$Search (Passive Clients)</a></font></li><li><font size="2">
+<a href="http://mutor.no-ip.com:413/protocol.htm#MultiSearch">$MultiSearch</a></font></li><li><font size="2"><a href="http://mutor.no-ip.com:413/protocol.htm#SRPassivesearchresult">$SR (Passive Search Result)</a></font></li></ul>
+<a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesservertoserver"><b>Command_Types_(server_to_server)</b></a> -- Command Types (server to server)<br>
+<ul>
+ <li><a href="http://mutor.no-ip.com:413/protocol.htm#Up"><font size="2">$Up</font></a>
+ </li><li><a href="http://mutor.no-ip.com:413/protocol.htm#Search2"><font size="2">$Search</font></a>
+ </li><li><a href="http://mutor.no-ip.com:413/protocol.htm#ConnectToMe2"><font size="2">$ConnectToMe</font></a>
+</li></ul>
+<a href="http://mutor.no-ip.com:413/protocol.htm#CommandTypesservertoserver"><b>Pinger (pinger to server)</b></a> -- Command Types (server to server)<br>
+   <ul>
+     <li><a href="http://mutor.no-ip.com:413/protocol.htm#Lock"><font size="2">$Lock</font></a>
+     </li><li><a href="http://mutor.no-ip.com:413/protocol.htm#Supports"><font size="2">$Supports</font></a>
+	 </li><li><a href="http://mutor.no-ip.com:413/protocol.htm#Key"><font size="2">$Key</font></a>
+	 </li><li><a href="http://mutor.no-ip.com:413/protocol.htm#BotINFO"><font size="2">$BotINFO</font></a>
+     </li><li><a href="http://mutor.no-ip.com:413/protocol.htm#HubINFO"><font size="2">$HubINFO</font></a>
+   </li></ul>
+
+<a href="http://mutor.no-ip.com:413/protocol.htm#AppendixA"><b>Appendix_A</b></a> -- Converting a Lock into a Key<br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#AppendixB"><b>Appendix_B</b></a> -- Creating a Lock<hr><a name="ClienttoClientHandShake"></a><p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt;</p><h2>Client to Client HandShake</h2><a name="MyNick"></a><h3>$MyNick</h3><p><font size="2">The listen User sends his Name when a user connecting.</font></p><ul><font size="2"> $MyNick&lt;ownnickname&gt;</font></ul><ul><li><font size="2">&lt;ownnickname&gt; is the nick of the user that sent to command.</font></li></ul><p><font size="2">The$Lock is sent immediately after the$MyNick command within the same packet.</font></p><ul><font size="2"> $Lock&lt;lock&gt; Pk=&lt;pk&gt;</font></ul><ul><li><font size="2">&lt;lock&gt; is used to generate&lt;key&gt;<br>See<a href="http://mutor.no-ip.com:413/protocol.htm#AppendixA">Appendix A: Converting a Lock into a Key</a> for how to compute the key from the lock.</font></li><li><font size="2">&lt;pk&gt; is unused, but SG believes Pk stands for "private" or "public key".</font></li></ul><p><font size="2">Immediately following the$MyNick +$Lock packet the connecting user sends their$MyNick +$Lock in the same fashion as above.</font></p><a name="Direction"></a><h3>$Direction</h3><p><font size="2">The$Direction command is a part of the response packet to the$Lock +$MyNick packet.</font></p><ul><font size="2"> $Direction&lt;direction&gt;&lt;anumber&gt;</font></ul><ul><li><font size="2">&lt;direction&gt; is either Upload or Download depending on if your client is uploading or downloading.</font></li><li><font size="2">&lt;anumber&gt; is a random number, when both clients want to start downloading then one with higher number starts first.</font></li></ul><p><font size="2">After the$Direction command we must send the$Key command (still with in the$Direction packet) in response to the other clients lock.</font></p><ul><font size="2"> $Key&lt;key&gt;</font></ul><ul><li><font size="2">&lt;key&gt; is generated from the other users&lt;lock&gt;<br>See<a href="http://mutor.no-ip.com:413/protocol.htm#AppendixA">Appendix A: Converting a Lock into a Key</a> for how to compute the key from the lock.</font></li></ul><p><font size="2">The users are now connected.</font></p><a name="Send"></a><h3>$Send</h3><p><font size="2">The$Send command informs the uploading client, that the download will start.</font></p><ul><font size="2"> $Send</font></ul><p><font size="2">Direct Connect sends upload data in chunks of 40906 bytes. After every 40906 bytes is recived the downloading client must send the$Send again.</font></p><hr>
+<a name="DownloadExample"></a><h3>Download Example:</h3><p></p><pre>	Client&lt;-&gt; Client Communication in DC. 11-05-2002. By aDe
+	---------------------------------------------------------- 
+
+	ACTIVE FILE DOWNLOAD 
+	---------------------- 
+	D = downloader 
+	U = uploader 
+	H = hub 
+
+	D&gt;H: $ConnectToMe&lt;U's username&gt;&lt;D's IP and port&gt;|
+	H&gt;U: $ConnectToMe&lt;U's username&gt;&lt;D's IP and port&gt;|
+	U&gt;D: Connection
+	U&gt;D: $MyNick&lt;U's nick&gt;|$Lock&lt;new lock with pk&gt;|
+	D&gt;U: $MyNick&lt;D's nick&gt;|$Lock&lt;new lock with pk&gt;|$Direction Upload&lt;anumber&gt;|$Key&lt;key for U's lock&gt;|
+	U&gt;D: $Direction Download&lt;anumber&gt;|$Key&lt;key for D's lock&gt;|
+	D&gt;U: $Get&lt;filepath + filename in exact case&gt;$&lt;start at byte (1=beginning of file)&gt;|
+	U&gt;D: $FileLength&lt;length of the requested file&gt;|
+	D&gt;U: $Send|
+	U&gt;D: Data, in many chunks.
+	D&gt;U: $Send|      &lt;- when 40906 bytes are sent, ask for more
+	</pre>
+<hr><a name="ClienttoServerLogin"></a>
+<p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt; </p>
+<h2>Client to Server Login</h2>
+<p><font size="2">When first logging in, the client creates a socket connection. 
+  The server sends,</font></p>
+<blockquote><font size="2"> $Lock&lt;lock&gt; Pk=&lt;pk&gt;<br>
+  $HubName&lt;hubname&gt;</font></blockquote>
+<ul>
+ <li><font size="2">&lt;lock&gt; is used to generate
+   &lt;key&gt;<br>
+    See<a href="http://mutor.no-ip.com:413/protocol.htm#AppendixA.htm">Appendix A: Converting a Lock into a Key</a>
+    for how to compute the key from the lock.</font></li>
+ <li><font size="2">&lt;pk&gt; is unused, but SG
+    believes Pk stands for "private" or "public key".</font></li>
+ <li><font size="2">&lt;hubname&gt; is the name of
+    the hub your connecting to (spaces permitted).</font></li>
+</ul>
+<p><font size="2">The client must then respond with,</font></p>
+<blockquote><font size="2"> $Key&lt;key&gt;<br>
+  $ValidateNick&lt;nick&gt;</font></blockquote>
+<ul>
+ <li><font size="2">&lt;key&gt; is computed as above.</font></li>
+ <li><font size="2">&lt;nick&gt; is the user's username.</font></li>
+ <font size="2">All characters except $ and | and space are allowed (the NMDC
+  server converts any spaces to underscores and allows the login to proceed using 
+  the corrected username).</font>
+</ul>
+<p><font size="2">If&lt;nick&gt; is already in use
+  or is otherwise not accepted, the server must send,</font></p>
+<blockquote><font size="2"> $ValidateDenide</font></blockquote>
+<p><font size="2">It really is$ValidateDenide, not
+ $ValidateDenied. In this case, the client must send
+ $ValidateNick again. Otherwise, the nick is accepted.
+  The server may then send,</font></p>
+<blockquote><font size="2"> $GetPass</font></blockquote>
+<p><font size="2">to which the client must reply,</font></p>
+<blockquote><font size="2"> $MyPass&lt;password&gt;
+ </font></blockquote>
+<ul>
+ <li><font size="2">&lt;password&gt; is the plain-text
+    password for&lt;nick&gt;.</font></li>
+</ul>
+<p><font size="2">If the password is accepted<i>and the user is an Op</i>, the
+  server must send,</font></p>
+<blockquote><font size="2"> $LogedIn</font></blockquote>
+<font size="2">It really is$LogedIn, not$LoggedIn.
+If the user is not an Op,$LogedIn is skipped.<br>
+If the password is not accepted, the server must send,</font>
+<blockquote><font size="2"> $BadPass</font></blockquote>
+<p><font size="2">and close the connection. NMDC hub answers with $HubIsFull even 
+  before the nickname is sent. Other hub implementations usually wait until the 
+  nickname is validated and then decide whether to let the user in or to disconnect 
+  him.<br>
+  If no password is required or the server accepts the password, the server must 
+  finally send,</font></p>
+<blockquote><font size="2"> $Hello&lt;nick&gt;</font></blockquote>
+<ul>
+ <li><font size="2">&lt;nick&gt; the clients nickname.</font></li>
+</ul>
+<p><font size="2">The user is now logged in.</font></p>
+<hr>
+<a name="LoginExample"></a><h3>Client Hub Login Example:</h3>
+<p> 
+</p><pre>	Client&lt;-&gt; Server Communication in DC. 01-26-2003. By Sid
+	---------------------------------------------------------- 
+
+	Client Hub Login Example
+	---------------------- 
+	C = client
+	H = hub 
+
+	C&gt;H: Connection
+	H&gt;C: $Lock&lt;lock&gt; Pk=&lt;pk&gt;|
+	H&gt;C: $HubName&lt;hubname&gt;|
+	C&gt;H: $Key&lt;key&gt;|$ValidateNick&lt;nick&gt;|
+	C&gt;H: $MyINFO $ALL&lt;nick&gt;&lt;interest&gt;$ $&lt;speed&gt;$&lt;e-mail&gt;$&lt;sharesize&gt;$
+	C&gt;H: $GetINFO&lt;othernick&gt;&lt;nick&gt;
+	C&gt;H: $GetINFO...
+	</pre><hr><a name="ServertoHubRegistrationServer"></a><p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt;</p><h2>Server to Hub Registration Server Communication</h2><p><font size="2">When first logging in, the server creates a socket connection. The hub registration server sends,</font></p><font size="2"><a name="Lock"></a></font><ul><font size="2"> $Lock&lt;lock&gt; Pk=&lt;pk&gt;<br></font></ul><ul><li><font size="2">&lt;lock&gt; is used to generate&lt;key&gt;<br>See<a href="http://mutor.no-ip.com:413/protocol.htm#AppendixA.htm">Appendix A: Converting a Lock into a Key</a> for how to compute the key from the lock.</font></li><li><font size="2">&lt;pk&gt; is unused, but SG believes Pk stands for "private" or "public key".</font></li></ul><p><font size="2">The server must then respond with,</font></p><a name="Key"></a><ul><font size="2">$Key&lt;key&gt;|&lt;hubname&gt;|&lt;hubaddress[:hubport]&gt;|&lt;hubdescription&gt;|&lt;hubusers&gt;|&lt;hubshare&gt;<br></font></ul><ul><li><font size="2">&lt;key&gt; is computed as above.</font></li><li><font size="2">&lt;hubname&gt; is the hubs's username.</font></li><li><font size="2">&lt;hubaddress[:hubport]&gt; is the hubs's address. Optional:hubport if hub port is not 411.</font></li><li><font size="2">&lt;hubdescription&gt; is the hubs's description.</font></li><li><font size="2">&lt;hubusers&gt; is the total number of users in the hub.</font></li><li><font size="2">&lt;hubshare&gt; is the total amount of data available in the hub (bytes).</font></li></ul><hr><a name="HubRegistrationExample"></a><h3>Hub Registration Example:</h3><p></p><pre>	Server&lt;-&gt; Hub Registration Server Communication in DC. 04-29-2003. By Sid
+	---------------------------------------------------------- 
+
+	Hublist Registration
+	---------------------- 
+	R = hub registration server
+	H = hub 
+
+	H&gt;R: Connection
+	R&gt;H: $Lock&lt;lock&gt; Pk=&lt;pk&gt;|
+	H&gt;R: $Key&lt;key&gt;|&lt;hubname&gt;|&lt;hubaddress[:hubport]&gt;|&lt;hubdescription&gt;|&lt;hubusers&gt;|&lt;hubshare&gt;|
+	R&gt;H: Connection Closed
+	</pre><br>
+<hr><a name="CommandTypesclienttoclient"></a><p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt;</p><h2>Command Types (client to client)</h2><p><font size="2">Direct Connect uses TCP and UDP for client to client communication.<br>Normaly the client listen at port 412 for client connections, but if the port already in use it uses 413,414 and so on..<br>The following section describes the format of the Commands, Each field is denoted with&lt; &gt;.<br>The fields in the command are separated by a single space character (ASCII 32).<br>And each Command ends with a | (pipe). All Commands are case sensitive.</font></p><a name="GetListLen"></a><h3>$GetListLen</h3><p><font size="2">The downloading client sends the$GetListLen to request the filesize of the remote DCList in bytes.</font></p><ul><font size="2"> $GetListLen</font></ul><p><font size="2">The uploading client responds to the$GetListLen command with$ListLen.</font></p><ul><font size="2"> $ListLen&lt;sizeinbyte&gt;</font></ul><ul><li><font size="2">&lt;sizeinbyte&gt; is the filesize of the remote DCList in bytes.</font></li></ul><a name="MaxedOut"></a><h3>$MaxedOut</h3><p><font size="2">The$MaxedOut command is sent when there are no freeslots available from the uploading user.</font></p><ul><font size="2"> $MaxedOut</font></ul><a name="Error"></a><h3>$Error</h3><p><font size="2">The$Error command is sent when an error occurs, like file not found.</font></p><ul><font size="2"> $Error&lt;errormessage&gt;</font></ul><ul><li><font size="2">&lt;errormessage&gt; is the message sent to the download client containing the error description.</font></li></ul><a name="Get"></a><h3>$Get</h3><p><font size="2">The$Get command is used to request a file from the uploading client.</font></p><ul><font size="2"> $Get&lt;filenameandpath&gt;$&lt;resumecount&gt;</font></ul><ul><li><font size="2">&lt;filenameandpath&gt; is the remote location of the file requested.</font></li><li><font size="2">&lt;resumecount&gt; is the byte offset to start at for resuming files.</font></li></ul><a name="FileLength"></a><h3>$FileLength</h3><p><font size="2">The$FileLength is sent in response to the$Get command.</font></p><ul><font size="2"> $FileLength&lt;sizeinbytes&gt;</font></ul><ul><li><font size="2">&lt;sizeinbytes&gt; is the file size in bytes of the file requested with the$Get command.</font></li></ul><a name="Canceled"></a><h3>$Canceled</h3><p><font size="2">The$Canceled command is sent by eather party signifying that the download has been canceled prematurly.</font></p><ul><font size="2"> $Canceled</font></ul><a name="UDPClientToClientCommands"></a><h3>UDP Client To Client Commands</h3><p><font size="2">The following commands are the Client To Client UDP Commands.</font></p><a name="SR"></a><h3>$SR</h3><p><font size="2">The$SR command is sent in response to a client searching. This is sent UDP when the searching client is in Active Mode.</font></p><ul><font size="2"> $SR&lt;nick&gt; &lt;searchresponse&gt; &lt;hubip&gt;:&lt;hubport&gt;</font></ul><ul><li><font size="2">&lt;nick&gt; is the nick of the user with the file.</font></li><li><font size="2">&lt;hubip&gt;:&lt;hubport&gt; are the values sent in the$Search command.</font></li></ul><p><font size="2">&lt;searchresponse&gt; is made up of</font></p><ul><font size="2">&lt;filenamewithpath&gt;&lt;filesizeinbytes&gt; &lt;current openslots&gt;/&lt;allopenslots&gt;&lt;hubname&gt;</font></ul><ul><li><font size="2">&lt;filenamewithpath&gt; is the location of the file on the remote client.</font></li><li><font size="2">&lt;filesizeinbytes&gt; is the size of the file found.</font></li><li><font size="2">&lt;current openslots&gt; is the number of free slots the remote client has available.</font></li><li><font size="2">&lt;allopenslots&gt; is the total number of slots the remote client has available.</font></li><li><font size="2">"" is the ascii character 5.</font></li></ul><p><font size="2">Note:$SR is the only command that does not end in a "|".</font></p><a name="Ping"></a><h3>$Ping</h3><p><font size="2">I'm not sure what the purpose of this command.</font></p><ul><font size="2"> $Ping&lt;senderIp&gt;:&lt;senderPort&gt;</font></ul><ul><li><font size="2">&lt;senderIp&gt; is the Ip address of the client sending the command.</font></li><li><font size="2">&lt;senderPort&gt; is the UDP port the client is listening on (Usually the same as TCP port).</font></li></ul><hr><a name="CommandTypesclienttoserver"></a><p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt;</p><h2>Command Types (client to server)</h2><p><font size="2">Direct Connect uses TCP for client to server communication.<br>The following section describes the format of the Commands, Each field is denoted with&lt; &gt;.<br>The fields in the command are separated by a single space character (ASCII 32).<br>And each Command ends with a| (pipe). All Commands are case sensitive.</font></p><a name="Hello"></a><h3>$Hello</h3><p><font size="2">Shortly after a new user,&lt;nick&gt; logs in, the server must send,</font></p><ul><font size="2"> $Hello&lt;nick&gt;</font></ul><ul><li><font size="2">&lt;nick&gt; is the nick of a recently logged in user.</font></li></ul><p><font size="2">This indicates&lt;nick&gt; has logged in. If the new user is an operator, the server must additionally send a$OpList command to all users (documented at$GetNickList).</font></p><p><font size="2">Each client should add&lt;nick&gt; to its list of hub users and, if$OpList is also received, update its list of operators. The new client must reply:</font></p><ul><font size="2"> $Version&lt;version&gt;<br></font></ul><ul><li><font size="2">&lt;version&gt; is<b>1.0091</b> by default.</font></li></ul><a name="GetNickList"></a><h3>$GetNickList</h3><p><font size="2">To obtain a list of other users' nicks, the client may send,</font></p><ul><font size="2"> $GetNickList</font></ul><p><font size="2">to which the server must reply,</font></p><ul><font size="2"> $NickList&lt;nick1&gt;$$&lt;nick2&gt;$$&lt;nick3&gt;$$...<br>$OpList&lt;op1&gt;$$&lt;op2&gt;$$&lt;op3&gt;$$...</font></ul><ul><li><font size="2">&lt;nick1&gt;,&lt;nick2&gt;,&lt;nick3&gt;, ... compose a $$-separated list of hub users' nicks (including operators). After the final nick there is a$$.</font></li><li><font size="2">&lt;op1&gt;$$&lt;op2&gt;$$&lt;op3&gt;$$... is a $$-separated list of connected users that are operators. After the final nick there is a$$. This list is a subset of the$NickList. If there are no connected operators, the server must send "$OpList"</font></li></ul><p><font size="2">If a client receives a$OpList command listing its own nick, it should enable the "Redirect User" and "Kick" functions.</font></p><a name="MyINFO"></a><h3>$MyINFO (Client to Server)</h3><p><font size="2">Shortly after logging in, the client must send,</font></p><ul><font size="2"> $MyINFO $ALL&lt;nick&gt;&lt;interest&gt;$ $&lt;speed&gt;$&lt;e-mail&gt;$&lt;sharesize&gt;$</font></ul><ul><li><font size="2">&lt;nick&gt; is the client's nick.</font></li><li><font size="2">&lt;interest&gt; is a string describing the user's interest and may be empty (All characters except $ and | are allowed).</font></li><li><font size="2">&lt;speed&gt; is a string describing the client's internet connection selected from "56Kbps", "Satellite", "DSL", "Cable", "LAN(T1)", and "LAN(T3)" followed by a byte indicating the speed class. The value of the byte is selected from at least 1 for 56Kbps, 3 for cable or DSL, or 7, also for DSL.</font></li><li><font size="2">&lt;e-mail&gt; is nick's e-mail address and may be "".</font></li><li><font size="2">&lt;sharesize&gt; is the number of bytes this client shares as a string.</font></li></ul><p><font size="2">The max size of the description is chosen by the hub implementation. (see $ValidateNick in<a href="http://mutor.no-ip.com:413/Client2Server_Login.htm">Client to Server Login</a>)<br>NOTE: some hub implementations do not consider a client to be in a logged in state before it has sent a$MyINFO. this is the correct behaviour, and the NMDC hub is flawed in this respect.</font></p><p><font size="2">The server must pass this message to all users of the hub, including the sender. The client is expected to send this again if the information changes. SX says that the last byte of the speed is selected from the ascii values of 1 for normal, 2 for away, 3 also for away, 4 for fileserver, 5 also for fileserver, 6 for fileserver away, 7 also for fileserver away, 8 for fireball, 9 also for fireball, 10 for fireball away, and 11 also for fireball away.</font></p><font size="2"><a name="GetINFO"></a></font><h3>$GetINFO</h3><p><font size="2">To obtain detailed information about a specific user, the client may send,</font></p><ul><font size="2"> $GetINFO&lt;othernick&gt;&lt;nick&gt;</font></ul><ul><li><font size="2">&lt;nick&gt; is this sending client's nick.</font></li><li><font size="2">&lt;othernick&gt; is the nick of the user that&lt;nick&gt; wants to know about.</font></li></ul><p><font size="2">The server must respond with exactly the$MyINFO command sent by&lt;othernick&gt; to the server. I don't know what to do if&lt;othernick&gt; has not sent a$MyINFO command (perhaps he would have never been listed in$GetNickList, in which case the command could be rejected). I don't know what to do if&lt;othernick&gt; doesn't exist.</font></p><a name="ConnectToMe"></a><h3>$ConnectToMe</h3><p><font size="2">The client may send$ConnectToMe to cause a peer to initiate a peer-to-peer connection for the purpose of transfering data.</font></p><ul><font size="2"> $ConnectToMe&lt;remoteNick&gt;&lt;senderIp&gt;:&lt;senderPort&gt;</font></ul><ul><li><font size="2">&lt;senderIp&gt; and&lt;senderPort&gt; are the host and port that the client wishes&lt;remoteNick&gt; to connect to.</font></li><li><font size="2">&lt;remoteNick&gt; is the remote user that should initiate the connection.</font></li></ul><p><font size="2">The server sends this message unaltered to&lt;remotenick&gt;.&lt;remotenick&gt; must open a TCP connection to&lt;senderIp&gt;:&lt;senderPort&gt;</font>.</p><a name="MultiConnectToMe"></a><h3>$MultiConnectToMe</h3><p><font size="2">The client may send this instead of the$ConnectToMe to cause a peer on another hub to initiate a peer-to-peer connection for the purpose of transfering data. This is an extension for multiple hubs, which I'm not worried about yet.</font></p><ul><font size="2"> $MultiConnectToMe&lt;nick&gt;&lt;senderIp&gt;:&lt;senderPort&gt;&lt;linkedserverip&gt;:&lt;linkedserverport&gt;</font></ul><a name="RevConnectToMe"></a><h3>$RevConnectToMe</h3><p><font size="2">A passive client may send this to cause a peer to send a$ConnectToMe back.</font></p><ul><font size="2"> $RevConnectToMe&lt;nick&gt;&lt;remoteNick&gt;</font></ul><ul><li><font size="2">&lt;nick&gt; is the sender of the message.</font></li><li><font size="2">&lt;remoteNick&gt; is the user which should send to$ConnectToMe.</font></li></ul><p><font size="2">The server must send this message unmodified to&lt;remoteNick&gt;. If&lt;remoteNick&gt; is an active client, it must send a$ConnectToMe to&lt;nick&gt;. If not, it will reply with$RevConnectToMe. The clients will no longer connect to each other because they are both in passive mode.</font></p><a name="To"></a><h3>$To</h3><p><font size="2">The client may send$To to send a private message to a peer.</font></p><ul><font size="2"> $To:&lt;othernick&gt; From:&lt;nick&gt; $&lt;&lt;nick&gt;&gt;&lt;message&gt;</font></ul><ul><li><font size="2">&lt;othernick&gt; is the peer who should receive the message.</font></li><li><font size="2">&lt;nick&gt; is the sender's nick (both instances).</font></li><li><font size="2">&lt;message&gt; is the text of the message (spaces permitted).</font></li></ul><p><font size="2">The server must pass the message unmodified to client&lt;othernick&gt; which must display the message to the user.</font></p><h3>&lt; &gt;</h3><p><font size="2">The client may send&lt; &gt; to send a public chat message to all hub users.</font></p><ul><font size="2">&lt;&lt;nick&gt;&gt;&lt;message&gt;</font></ul><ul><li><font size="2">&lt;nick&gt; is this sender's nick.</font></li></ul><p><font size="2">The server must pass the message unmodified to all other clients including&lt;nick&gt;.</font></p><a name="Quit"></a><h3>$Quit</h3><p><font size="2">The hub should send$Quit to all users in the hub to let them know the users has disconnected.</font></p><ul><font size="2"> $Quit&lt;nick&gt;</font></ul><ul><li><font size="2">&lt;nick&gt; is the sender's nick.</font></li></ul><p><font size="2">The client must then close the socket. The server must send this message to all users when it is received from a client, or when a client connection is lost. Each client should remove&lt;nick&gt; from its list of hub users.</font></p><a name="OpForceMove"></a><h3>$OpForceMove</h3><p><font size="2">An op may send a$OpForceMove to cause a client to move to a different server.</font></p><ul><font size="2"> $OpForceMove $Who:&lt;victimNick&gt;$Where:&lt;newIp&gt;$Msg:&lt;reasonMsg&gt;</font></ul><ul><li><font size="2">&lt;victimNick&gt; is the nick that will be asked to move.</font></li><li><font size="2">&lt;newHub&gt; is the IP address (and optional colon-separated port) of another hub that the user should move to.</font></li><li><font size="2">&lt;reasonMsg&gt; is the reason provided to&lt;victimNick&gt;.</font></li></ul><p><font size="2">On receiving this, the server must send to&lt;victimNick&gt;,</font></p><ul><font size="2"> $ForceMove&lt;newIp&gt;<br>$To:&lt;victimNick&gt; From:&lt;senderNick&gt; $&lt;&lt;senderNick&gt;&gt; You are being re-directed to&lt;newHub&gt; because:&lt;reasonMsg&gt;</font></ul><ul><li><font size="2">&lt;senderNick&gt; is the nick that sent the$OpForceMove.</font></li></ul><p><font size="2">In addition to displaying the message,&lt;victimNick&gt; must disconnect from the server and connect to&lt;newIp&gt;. The server should not disconnect the client. I'm not sure if the client should send$Quit or if it should simply close the socket.</font></p><a name="Kick"></a><h3>$Kick</h3><p><font size="2">Ops may send$Kick to cause the hub to disconnect a user.</font></p><ul><font size="2"> $Kick&lt;victimNick&gt;</font></ul><ul><li><font size="2">&lt;victimNick&gt; is the nick of the user to disconnect.</font></li></ul><p><font size="2">The server must disconnect&lt;victimNick&gt;. The user is notified with the$To command.</font></p><a name="SearchActiveclients"></a><h3>$Search - Active clients</h3><p><font size="2">Clients are either "active", indicating they are on the Internet and can receive data directly from peers, or "passive", in which case they can communicate only through the existing connection to the server. To perform a search, an active client can send,</font></p><ul><font size="2"> $Search&lt;clientip&gt;:&lt;clientport&gt;&lt;searchstring&gt;<br>i.e. $Search 64.78.55.32:412 T?T?500000?1?madonna$ray</font></ul><ul><li><font size="2">&lt;clientip&gt; is this client's IP address.</font></li><li><font size="2">&lt;clientport&gt; is a UDP port on which the client is listening for responses.</font></li><li><font size="2">&lt;searchstring&gt; is a string describing the file the client is searching for.</font></li></ul><p><font size="2">&lt;searchstring&gt; is made up of</font></p><ul><font size="2">&lt;sizerestricted&gt;?&lt;isminimumsize&gt;?&lt;size&gt;?&lt;datatype&gt;?&lt;searchpattern&gt;</font></ul><ul><li><font size="2">&lt;sizerestricted&gt; isT if the search should be restricted to files of a minimum or maximum size, otherwiseF.</font></li><li><font size="2">&lt;isminimumsize&gt; isF if&lt;sizerestricted&gt; isF or if the size restriction places an upper limit on file size, otherwiseT.</font></li><li><font size="2">&lt;size&gt; is the minimum or maximum size of the file to report (according to&lt;isminimumsize&gt;) if&lt;sizerestricted&gt; isT, otherwise 0.</font></li><li><font size="2">&lt;datatype&gt; restricts the search to files of a particular type. It is an integer selected from:</font><ul><li><font size="2">1 for any file type</font></li><li><font size="2">2 for audio files ("mp3", "mp2", "wav", "au", "rm", "mid", "sm")</font></li><li><font size="2">3 for compressed files ("zip", "arj", "rar", "lzh", "gz", "z", "arc", "pak")</font></li><li><font size="2">4 for documents ("doc", "txt", "wri", "pdf", "ps", "tex")</font></li><li><font size="2">5 for executables ("pm", "exe", "bat", "com")</font></li><li><font size="2">6 for pictures ("gif", "jpg", "jpeg", "bmp", "pcx", "png", "wmf", "psd")</font></li><li><font size="2">7 for video ("mpg", "mpeg", "avi", "asf", "mov")</font></li><li><font size="2">8 for folders</font></li></ul></li><li><font size="2">&lt;searchpattern&gt; is used other users to determine if any files match. It is of the form:</font><ul><font size="2">&lt;term1&gt;$&lt;term2&gt;$&lt;term3&gt;$...$</font></ul><font size="2">where&lt;term1&gt;,&lt;term2&gt;, ... are search terms; normally, each search term is a space-delimited word entered by the user. Each search term is followed by a$, and after the last search term there is a total of two$.</font></li></ul><p><font size="2">The server must forward this message unmodified to all the other users. Every other user with one or more matching files must send one UDP packet to&lt;clientip&gt;:&lt;clientport&gt; for each match containing just the message,</font></p><ul><font size="2"> $SR&lt;nick&gt;&lt;searchresponse&gt;&lt;hubip&gt;:&lt;hubport&gt;</font></ul><ul><li><font size="2">&lt;nick&gt; is the nick of the user with the file.</font></li><li><font size="2">&lt;hubip&gt;:&lt;hubport&gt; are the values sent in the $Search command.</font></li></ul><p><font size="2">&lt;searchresponse&gt; is made up of</font></p><ul><font size="2">&lt;filenamewithpath&gt;&lt;filesizeinbytes&gt; &lt;current openslots&gt;/&lt;allopenslots&gt;&lt;hubname&gt;</font></ul><ul><li><font size="2">&lt;filenamewithpath&gt; is the location of the file on the remote client.</font></li><li><font size="2">&lt;filesizeinbytes&gt; is the size of the file found.</font></li><li><font size="2">&lt;current openslots&gt; is the number of free slots the remote client has available.</font></li><li><font size="2">&lt;allopenslots&gt; is the total number of slots the remote client has available.</font></li><li><font size="2">"" is the ascii character 5.</font></li></ul><p><font size="2">Note: When the client sends the$SR command to the server it adds&lt;ClientsNick&gt; to the end of&lt;searchresponse&gt;.</font></p><a name="SearchPassiveclients"></a><h3>$Search - Passive clients</h3><p>To search the network for files matching a search term, a passive client may send,</p><ul>$Search Hub:&lt;searchingNick&gt;&lt;searchstring&gt;</ul><p>The server must forward this message unmodified to all the other users. Every other user with one or more matching files must send to the server,</p><ul>$SR&lt;resultNick&gt;&lt;filepath&gt;&lt;filesize&gt;&lt;freeslots&gt;/&lt;totalslots&gt;&lt;hubname&gt; (&lt;hubhost&gt;[:&lt;hubport&gt;])^E&lt;searchingNick&gt;</ul><ul><li>&lt;resultNick&gt; is the nick of the user reporting the result.</li><li>&lt;filepath&gt; is the path and file name of the matching file on&lt;resultNick&gt;'s computer. Eventually,&lt;searchingNick&gt; will pass this string unmodified to&lt;resultNick&gt; to download the file.</li><li>&lt;filesize&gt; is the integer size of the file in bytes.</li><li>&lt;freeslots&gt; and&lt;totalslots&gt; is&lt;resultNick&gt;'s number of free slots and total slots, respectively.</li><li>&lt;hubname&gt; is the name of the hub from which the query arrived.</li><li>&lt;hubhost&gt; and&lt;hubport&gt; are the hostname and port of the hub as perceived by&lt;resultNick&gt; (if :&lt;hubport&gt; is omitted, it is taken to be 411).</li><li>&lt;searchingNick&gt; is the nick that initiated the search and is the same as in the $Search command.</li><li> is the ascii character 5.</li></ul><p>The server must pass the$SR message unmodified to&lt;searchingNick&gt;.</p><a name="MultiSearch"></a><h3>$MultiSearch</h3><p><font size="2">This is takes the same parameters as$Search (both active and passive) and behaves exactly as$Search, except the hub must additionally pass the search request to the other hubs in the cluster using the hub-to-hub$Search command.</font></p><a name="SRPassivesearchresult"></a><h3>$SR - Passive search result</h3><p><font size="2">Replies to passive search requests are sent through the server. Compare the$SR in<a href="http://mutor.no-ip.com:413/Command_Types_(client_to_client).htm">Command Types (client to client)</a>.</font></p><ul><font size="2"> $SR&lt;replynick&gt;&lt;searchresponse&gt;&lt;searchnick&gt;</font></ul><ul><li><font size="2">&lt;replynick&gt; is the nick of the user with the file.</font></li><li><font size="2">&lt;searchnick&gt; is the nick of the user who did the query.</font></li><li><font size="2"> is the ascii character 5.</font></li></ul><p><font size="2">&lt;searchresponse&gt; is made up of</font></p><ul><font size="2">&lt;filenamewithpath&gt;&lt;filesizeinbytes&gt;&lt;current openslots&gt;/&lt;allopenslots&gt;&lt;hubname&gt; (&lt;hubip&gt;)</font></ul><ul><li><font size="2">&lt;filenamewithpath&gt; is the location of the file on the remote client.</font></li><li><font size="2">&lt;filesizeinbytes&gt; is the size of the file found.</font></li><li><font size="2">&lt;current openslots&gt; is the number of free slots the remote client has available.</font></li><li><font size="2">&lt;allopenslots&gt; is the total number of slots the remote client has available.</font></li><li><font size="2">&lt;hubname&gt; is the name of the hub on which the respondent recieved the passive search request.</font></li><li><font size="2">&lt;hubip&gt; is the IP address of the hub. Note that is does not have a port number (at least DC++ does not send one).</font></li><li><font size="2"> is the ascii character 5.</font></li></ul><font size="2">The search result should be forwarded to&lt;searchnick&gt;, but without the&lt;searchnick&gt; at the end.</font><hr><a name="CommandTypesservertoserver"></a><p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt;</p><h2>Command Types (server to server)</h2><p><font size="2">Direct Connect uses UDP for server to server communication.<br>The following section describes the format of the Commands. Each field is denoted with&lt; &gt;.<br>The fields in the command are separated by a single space character (ASCII 32).<br>And each Command ends with a| (pipe). All Commands are case sensitive.</font></p><a name="Up"></a><h3>$Up</h3><p><font size="2">This message will be sent to each linked server.</font></p><ul><font size="2"> $Up&lt;linkedserverpassword&gt;&lt;ownip&gt;</font></ul><ul><li><font size="2">&lt;linkedserverpassword&gt; is the multi-hub searching password shared by linked hubs.</font></li><li><font size="2">&lt;ownip&gt; is the ip address of the hub sending the command.</font></li></ul><p><font size="2">The server receiving the$Up command must then respond with</font></p><ul><font size="2"> $UpToo&lt;linkedserverpassword&gt;&lt;ownip&gt;</font></ul><ul><li><font size="2">&lt;linkedserverpassword&gt; is the multi-hub searching password shared by linked hubs.</font></li><li><font size="2">&lt;ownip&gt; is the ip address of the hub sending the command.</font></li></ul><a name="Search2"></a><h3>$Search</h3><p><font size="2">Clients are either "active", indicating they are on the Internet and can receive data directly from peers, or "passive", in which case they can communicate only through the existing connection to the server. To perform a search, an active client can send,</font></p><ul><font size="2"> $Search&lt;clientip&gt;:&lt;clientport&gt;&lt;searchstring&gt;<br>i.e. $Search 64.78.55.32:412 T?T?500000?1?madonna$ray</font></ul><ul><li><font size="2">&lt;clientip&gt; is this client's IP address.</font></li><li><font size="2">&lt;clientport&gt; is a UDP port on which the client is listening for responses.</font></li><li><font size="2">&lt;searchstring&gt; is a string describing the file the client is searching for.</font></li></ul><p><font size="2">&lt;searchstring&gt; is made up of</font></p><ul><font size="2">&lt;sizerestricted&gt;?&lt;isminimumsize&gt;?&lt;size&gt;?&lt;datatype&gt;?&lt;searchpattern&gt;</font></ul><ul><li><font size="2">&lt;sizerestricted&gt; isT if the search should be restricted to files of a minimum or maximum size, otherwiseF.</font></li><li><font size="2">&lt;isminimumsize&gt; isF if&lt;sizerestricted&gt; isF or if the size restriction places an upper limit on file size, otherwiseT.</font></li><li><font size="2">&lt;size&gt; is the minimum or maximum size of the file to report (according to&lt;isminimumsize&gt;) if&lt;sizerestricted&gt; isT, otherwise 0.</font></li><li><font size="2">&lt;datatype&gt; restricts the search to files of a particular type. It is an integer selected from:</font><ul><li><font size="2">1 for any file type</font></li><li><font size="2">2 for audio files ("mp3", "mp2", "wav", "au", "rm", "mid", "sm")</font></li><li><font size="2">3 for compressed files ("zip", "arj", "rar", "lzh", "gz", "z", "arc", "pak")</font></li><li><font size="2">4 for documents ("doc", "txt", "wri", "pdf", "ps", "tex")</font></li><li><font size="2">5 for executables ("pm", "exe", "bat", "com")</font></li><li><font size="2">6 for pictures ("gif", "jpg", "jpeg", "bmp", "pcx", "png", "wmf", "psd")</font></li><li><font size="2">7 for video ("mpg", "mpeg", "avi", "asf", "mov")</font></li><li><font size="2">8 for folders</font></li></ul></li><li><font size="2">&lt;searchpattern&gt; is used other users to determine if any files match. It is of the form:</font><ul><font size="2">&lt;term1&gt;$&lt;term2&gt;$&lt;term3&gt;$...$</font></ul><font size="2">where&lt;term1&gt;,&lt;term2&gt;, ... are search terms; normally, each search term is a space-delimited word entered by the user. Each search term is followed by a$, and after the last search term there is a total of two$.</font></li></ul><a name="ConnectToMe2"></a><h3>$ConnectToMe</h3><p><font size="2">This message sends the server to each linked server, when a user sends the$MultiConnectToMe message.</font></p><ul><font size="2"> $ConnectToMe&lt;remotenick&gt;&lt;senderip&gt;:&lt;senderport&gt;</font></ul><ul><li><font size="2">&lt;remotenick&gt; is the nick who we would like to connect to.</font></li><li><font size="2">&lt;senderip&gt; is our external ip address.</font></li><li><font size="2">&lt;senderport&gt; is the port we are listening on.</font></li></ul><hr><p><a name="CommandTypesExperimental"></a></p><p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt;</p><h2>Command Types (Experimental)</h2><p><font size="2">The fallowing commands are experimental and many have not been implemented yet. I feel that these commands are required to combat the level of fake sharing on the network.<br>The following section describes the format of the Commands, Each field is denoted with&lt; &gt;.<br>The fields in the command are separated by a single space character (ASCII 32).<br>And each Command ends with a| (pipe). All Commands are case sensitive.</font></p><a name="MyINFO2"></a><h3>$MyINFO</h3><p><font size="2">This is a modified version of the$MyINFO command that I feel will be useful.</font></p><ul><font size="2"> $MyINFO $ALL&lt;nick&gt;&lt;interest&gt;$ $&lt;speed&gt;$&lt;e-mail&gt;$&lt;sharesize&gt;$&lt;slots&gt;$&lt;onlinetime&gt;$</font></ul><ul><li><font size="2">&lt;nick&gt; is the client's nick.</font></li><li><font size="2">&lt;interest&gt; is a string describing the user's interest and may be empty (All characters except $ and | are allowed).</font></li><li><font size="2">&lt;speed&gt; is a string describing the client's internet connection selected from "56Kbps", "Satellite", "DSL", "Cable", "LAN(T1)", and "LAN(T3)" followed by a byte indicating the speed class. The value of the byte is selected from at least 1 for 56Kbps, 3 for cable or DSL, or 7, also for DSL.</font></li><li><font size="2">&lt;e-mail&gt; is nick's e-mail address and may be "".</font></li><li><font size="2">&lt;sharesize&gt; is the number of bytes this client shares as a string.</font></li><li><font size="2">&lt;slots&gt; is the nuber of free slots / the total slots.</font></li><li><font size="2">&lt;onlinetime&gt; is the time the client application is online. The format should be Days:Hours:Minutes</font>.</li></ul>
+<a name="Supports"></a>
+<h3>$Supports</h3>
+<p><font size="2">Extension
+Supported By: DC++ 0.17+ (Client to Client), DC++ 0.300 (Hub to Client)</font></p><br>
+Notes:<br>
+<br>
+� EXTENDEDPROTOCOL should not be sent if the hub/client supports no extensions<br>
+� A blank $Supports is not permitted<br>
+� Spaces aren't allowed in feature names<br>
+� For client extensions, the name of the feature should be the same as the command.<br>
+� Hubs usually want to receive Supports before answering the Lock challenge with a key. So first packet to hub should be: $Supports ..|$Key ..|$ValidateNick ..|<br>
+<br><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br><br>
+Known Extensions<br>
+<br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Client to Hub</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#NoGetINFO">NoGetINFO</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#NoHello">NoHello</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#UserIP2">UserIP2</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#UserCommand">UserCommand</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#TTHSearch">TTHSearch</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#OpPlus">OpPlus</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#Feed">Feed</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#MCTo">MCTo</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#HubTopic">HubTopic</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#ZPipe0">ZPipe0</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#ZLine">ZLine</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#BotList">BotList</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#QuickList">QuickList</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#ClientID">ClientID</a><br>
+<br><br><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Client to Client</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#BZList">BZList</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#MiniSlots">MiniSlots</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#GetZBlock">GetZBlock</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#XmlBZList">XmlBZList</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#ADCGet">ADCGet</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#TTHL">TTHL</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#TTHF">TTHF</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#ZLIG">ZLIG</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#ClientID2">ClientID</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#CHUNK">CHUNK</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#GetTestZBlock">GetTestZBlock</a><br>
+<a href="http://mutor.no-ip.com:413/protocol.htm#GetCID">GetCID</a><br><br>
+<a name="SupportsC2H"></a>
+<h2>Client to Hub</h2><br>
+<a name="NoGetINFO"></a>
+<h3>NoGetINFO</h3>
+Name: NoGetINFO<br>
+Context: Hub<br>
+Supported By: DC++ 0.302+<br><br>
+Description This indicates that hub doesn't need to receive a $GetINFO from a client to send out $MyINFO. This is a 
+variation on the QuickList proposal that is easy to implement and does half of QuickList's job.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="NoHello"></a>
+<h3>NoHello</h3>
+Name: NoHello<br>
+Context: Hub<br>
+Supported By: DC++ 0.305+<br><br>
+Description<br><br>
+This indicates that the client doesn't need either $Hello or $NickList to be sent to it when connecting to a hub. 
+To populate its user list, a $MyINFO for each user is enough. $Hello is still accepted, for adding bots to the user list.
+ DC++ still sends a $GetNickList to indicate that it is interested in the user list. During login, hubs must still send 
+ $Hello after $ValidateNick to indicate that the nick was accepted.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="UserIP2"></a>
+<h3>UserIP2</h3>
+Name: UserIP2<br>
+Context: Hub<br>
+Supported By: DC++ 0.305+<br><br>
+Description<br>
+This signals support for v2 of the $UserIP command.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="UserCommand"></a>
+<h3>UserCommand</h3>
+Name: UserCommand<br>
+Context: Hub<br>
+Supported By: DC++ 0.300+<br><br>
+Description<br>
+This indicates support for $UserCommand, which is a standard way of adding hub-specific shortcuts to the client.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="OpPlus"></a>
+<h3>OpPlus</h3>
+No Information is currently available.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="Feed"></a>
+<h3>Feed</h3>
+No Information is currently available.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="TTHSearch"></a>
+<h3>TTHSearch</h3>
+Name: TTHSearch<br>
+Context: Hub<br>
+Supported By: DC++ 0.307+<br><br>
+Description<br>
+This indicates that the client supports searching for queued files by TTH, if there is one available to it. 
+For DC++, finding matches in the share by TTHes is more CPU efficient than any previous method. See $Search command 
+for details.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="MCTo"></a>
+<h3>MCTo</h3>
+Name: MCTo<br>
+Context: Hub<br>
+Supported By: YnHub<br><br>
+Description<br>
+This feature indicates support for $MCTo.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="HubTopic"></a>
+<h3>HubTopic</h3>
+Name: HubTopic<br>
+Context: Hub<br><br>
+Description<br>
+This feature indicates support for $HubTopic.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="ZPipe0"></a>
+<h3>ZPipe0</h3>
+Name: ZPipe0<br><br>
+Description<br>
+This feature indicates support for $ZOn.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="ZLine"></a>
+<h3>ZLine</h3>
+Name: ZLine<br><br>
+Description<br>
+This feature indicates support for $Z.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="BotList"></a>
+<h3>BotList</h3>
+Name: BotList<br>
+Context: Hub<br><br>
+Description<br>
+This feature indicates support for $BotList.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="QuickList"></a>
+<h3>QuickList</h3>
+Name: QuickList<br>
+Supported By: BlackDC, iDC++, dDC++, Zion++<br><br>
+Description<br>
+This flag indicates support for QuickList.
+Use of the terms NDC and NHUB denote a client or hub not featuring QuickList and QDC and QHUB for those that do.
+The term DC is used when the type is not yet established or of no importance. EACH and ALL signals that a message 
+is sent N times, one message for each connected user. Also note that the terms IF, MAY, SHOULD and MUST, have the 
+same meaning as in the internet RFC specs.<br><br><br>
+Connecting<br><br>
+1 A DC connects to QHUB and does nothing<br>
+2 QHUB sends $Lock which starts with EXTENDEDPROTOCOL<br>
+3 QHUB also sends $HubName<br>
+4 A DC must send $Key<br>
+5 A DC may also send '$Supports QuickList|' to signal in is in fact a QDC<br>
+6 QHUB responds with '$Supports QuickList|'<br><br><br>
+Identification<br><br>
+1 A QDC may but should not send $Version<br>
+1 A QDC must send $MyINFO<br><br><br>
+Authentication<br><br>
+1 QHUB may send $GetPass<br>
+2 QDC responds with $MyPass<br>
+3 QHUB may send $BadPass and disconnect<br>
+4 QHUB may send $ValidateDenide and disconnect<br><br><br>
+Acceptance<br><br>
+1 QHUB may send $LogedIn to signal that H: should not be incremented<br>
+2 QHUB sends all clients MyINFO to the QDC<br>
+3 QHUB sends $OpList to the QDC<br>
+4 QHUB may send $Hello to all clients but should send it to non QDC only<br>
+5 QHUB sends $MyINFO to all QDC clients<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="ClientID"></a>
+<h3>ClientID</h3>
+Name: ClientID<br>
+Context: Client<br>
+Supported By: BlackDC, iDC++, dDC++, Zion++<br><br>
+Description<br>
+This flag indicates support for the $ClientID command.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2H">Supports Client to Hub</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="SupportsC2C"></a>
+<h2>Client to Client</h2><br>
+
+<a name="BZList"></a>
+<h3>BZList</h3>
+Name: BZList<br>
+Context: Client<br>
+Supported By: DC++ 0.17 through 0.401<br><br>
+Description<br><br>
+This signals support for a bzip2 compressed file list, instead of the huffman encoded list that NMDC pioneered. 
+This compressed file list is available for download under the name MyList.bz2, instead of MyList.DcLst.<br><br><br>
+Example<br><br>
+$Get MyList.bz2$1|<br><br><br>
+Benefits<br><br>
+� Better compression than huffman, by 2-3 times<br>
+� Smaller file lists can be transferred more easily<br>
+� BZip2 is an established compression algorithm<br>
+Note: BZList was the first protocol extension signalled by $Supports<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="MiniSlots"></a>
+<h3>MiniSlots</h3>
+Name: MiniSlots<br>
+Context: Client<br>
+Supported By: DC++ 0.304+<br><br>
+Description<br><br>
+This extension signals support for the concept of a "mini-slot" - a special type of slot that has been historically 
+used to transfer small files and file lists. This feature was one of the first that DC++ pioneered; NMDC would close 
+the file list browser when the connection dropped (which it would after sending the $MaxedOut if slots were full).<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="GetZBlock"></a>
+<h3>GetZBlock</h3>
+Name: GetZBlock<br>
+Context: Client, Hub
+Supported By: DC++ 0.307+<br><br>
+Description<br><br>
+Instead of $Get and $Send, use "$GetZBlock<start><numbytes><filename>|" where<start> is the 0-based (yes, 0-based, not like $Get that is 1-based) starting index of the file used,<numbytes> is the number of bytes to send and<filename> obviously is the filename.
+The other client then responds "$Sending<bytes>|<compressed data="">", if the sending is ok or "$Failed<errordescription>|" if it is not. If everything is ok, the data is sent until the whole uncompressed length has been sent.
+<bytes> specifies how many uncompressed bytes will be sent, not compressed, as the sending client doesn't know how well the file will compress. $Sending is needed to be able to distinguish the failure command from file data.
+Only one roundtrip is done for each block though, minimizing the need for maintaining states.<br><br>
+Compression<br><br>
+Compression is done using ZLib (v 1.2.2 in DC++ 0.667 onwards), using dynamic compression level. The compression 
+level can of course be changed by the implementor to reduce CPU usage, or even just store compression in the case of 
+non-compressible files, which then works as adler32 check of the transferred data.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="XmlBZList"></a>
+<h3>XmlBZList</h3>
+Name: XmlBZList<br>
+Context: Client<br>
+Supported By: DC++ 0.307+<br><br>
+Description<br><br>
+Supporting this means supporting UTF-8 XML file lists with the following general structure:<br><br>
+<pre><filelisting version="1" generator="dc client name and version">
+	<directory name="xxx">
+		<directory name="yyy">
+			<file name="zzz" size="1">
+		</file></directory>
+	</directory>
+
+</filelisting></pre>
+In each directory, including the root, the name of the entity must be case-insensitive unique in that level of the hierarchy.
+Other fields may be added as necessary. DC++ for instance adds the TTH attribute to each file it knows the TTH root of in base32 encoding.
+The file list is available as "files.xml.bz2" (vs MyList.DcLst), and is compressed using bzip2.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="ADCGet"></a>
+<h3>ADCGet</h3>
+Name: ADCGet<br>
+Context: Client<br>
+Supported By: DC++ 0.402+<br><br>
+Description<br><br>
+This feature indicates support for $ADCGET, a file retrieval command backported from the ADC draft.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="TTHL"></a>
+<h3>TTHL</h3>
+Name: TTHL<br>
+Context: Client<br>
+Supported By: DC++ 0.402+<br><br>
+Description<br><br>
+This feature indicates support for the "tthl" namespace for $ADCGET. This namespace allows transfer of the intermediate 
+(leaf) hashes used to calculate the TTH root hash. Those hashes allow verfication of segments of the associated file.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="TTHF"></a>
+<h3>TTHF</h3>
+Name: TTHF<br>
+Context: Client<br>
+Supported By: DC++ 0.402+<br><br>
+Description<br><br>
+This feature indicates support for the retrieving a file by its TTH through $ADCGET. Instead of a filename, 
+use "TTH/<hash>", where<hash> is the Base32 encoded representation of its TTH root hash.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="ZLIG"></a>
+<h3>ZLIG</h3>
+Name: ZLIG<br>
+Context: Client<br>
+Supported By: DC++ 0.402+<br><br>
+Description<br><br>
+This feature indicates support for compressing the stream of data sent by $ADCGET with the ZLib library. 
+To enable compression, ZL1 is used as a parameter to $ADCGET and is also echoed back with $ADCSND.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="ClientID2"></a>
+<h3>ClientID</h3>
+Name: ClientID<br>
+Context: Client<br>
+Supported By: BlackDC, iDC++, dDC++, Zion++<br><br>
+Description<br>
+This flag indicates support for the $ClientID command.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="CHUNK"></a>
+<h3>CHUNK</h3>
+Name: CHUNK<br>
+Context: Client<br>
+Supported By: Valknut (DCGUI-QT)<br><br>
+Description<br><br>
+This is a protocol extension by Valknut that allows retrieval of sections of a file through a modified $Get syntax. 
+The syntax is:<br>
+<pre>$Get<filename>$<start-position>$<chunk-size>|
+</chunk-size></start-position></filename></pre><br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="GetTestZBlock"></a>
+<h3>GetTestZBlock</h3>
+Name: GetTestZBlock<br>
+Context: Client<br>
+Supported By: DC++ 0.302 - 0.306<br><br>
+Description<br><br>
+This is the supports flag to indicate support for the beta version of compressed transfers. Two commands must be 
+supported with this command: $GetTestZBlock and $Sending. The functionality of the latter changed when this feature 
+came out of beta; see GetZBlock.<br><br>
+This feature should not be used in modern clients, as there were bugs in the implementation prior to DC++ 0.307.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="GetCID"></a>
+<h3>GetCID</h3>
+No Information is currently available.<br><br><br>
+<br><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="BotINFO"></a><a name="HubINFO">
+<h3>$BotINFO</h3>
+From NMDC Protocol<br><br>
+$BotINFO / $HubINFO<br><br>
+<b>Syntax</b><br><br> Client (pinger) request<br><br>
+<pre>$BotINFO&lt;bot description&gt;|</pre><b>Hub response</b><br>
+<pre>$HubINFO&lt;hub name&gt;$&lt;hub address:port&gt;$&lt;hub description&gt;$&lt;max users&gt;$&lt;min share in bytes&gt;$&lt;min slots&gt;$&lt;max hubs&gt;$&lt;hub type&gt;$&lt;hubowner login&gt;|
+</pre>
+<br> Note that the above is one command string but has been split over multiple lines here for clarity<br><br>
+<b>Description</b><br><br>
+ This command is for hublists to get some extended information about a hub through the use of a Hublist Pinger<br><br>
+� Bot description can be any string, usually information regarding, and address of, the hublist. � Hub name, address 
+and description are the the items which will be shown in the hublist (some hubs have multiple addresses and this helps 
+to get primary address). Description changes often on some hubs so this helps with updating it. � Max users, min share, 
+min slots and maximum number of open hubs for the client helps users to find suitable hubs. � Hub type gives information 
+about the hub software and script which gave the information. � Hubowner login is meant to help hubowners to edit 
+information about their hub directly from the hublist portal It is usually an email address where the account/password 
+information should be sent. � If the hub address is 127.0.0.1, the Hublist.org pinger will remove the hub from its 
+database. (Or is supposed to.)<br><br><b>Support</b><br><br> These commands are supported by the following:<br><br>
+� GeneralBot &gt;= 0.24 (NMDCH Script)<br>
+� PtokaX<br> � SDCH<br> � Verlihub<br>
+� Yhub<br>
+� PHPDC-Hub<br>
+� DB Hub since version 0.314<br>
+� HubRules &gt;= 1.11 (DCH++ Plugin)<br>
+� HubList &gt;= 0.1.0 (ODC(#)H Plugin)<br>
+<br></a><a href="http://mutor.no-ip.com:413/protocol.htm#SupportsC2C">Supports Client to Client</a><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a>/<a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a><br>
+<a name="SupportsBZList"></a><h3>$Supports BZList</h3><p><font size="2">This command is currently supported by DC++ to notify the downloading client that a BZList is available if their are no free slots.</font></p><ul><font size="2"> $SupportsBZList</font></ul><p><font size="2">Currently this command is only sent in the Client to Client communication and is sent by the client that is being connected to immediately after the$Lock command.</font></p><p><font size="2">To improve apon this design I belive that this command should be refined in its use. For instance, if this command is sent the client should send a BZList regardless of the free slots status. The old style DCLst should only be sent if the client does not support BZLists.</font></p>
+<hr><a name="AppendixA"></a><p><a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction / Contents</a>&gt;</p><h2>Appendix A: Converting a Lock into a Key</h2><p><font size="2">As part of the initial negotiation between the client and hub, the hub sends a$Lock&lt;lock&gt; Pk=&lt;pk&gt; command and the client must respond with a$Key&lt;key&gt; command. Until the DCN encoding, which we'll discuss last, the&lt;key&gt; has exactly as many characters as the&lt;lock&gt;.</font></p><p><font size="2">Except for the first, each<tt>key</tt> character is computed from the corresponding<tt>lock</tt> character and the one before it. If the first character has index 0 and the lock has a length of<tt>len</tt> then:</font></p><pre><font size="2">
+for (i = 1; i &lt; len; i++)
+	key[i] = lock[i] xor lock[i-1];</font></pre><p><font size="2">The first key character is calculated from the first lock character and the last two lock characters:</font></p><pre><font size="2">
+key[0] = lock[0] xor lock[len-1] xor lock[len-2] xor 5</font></pre><p><font size="2">Next, every character in the key must be nibble-swapped:</font></p><pre><font size="2">
+for (i = 0; i &lt; len; i++)
+	key[i] = ((key[i]&lt;&lt;4) &amp; 240) | ((key[i]&gt;&gt;4) &amp; 15)</font></pre><p><font size="2">Finally, the characters with the decimal ASCII values of 0, 5, 36, 96, 124, and 126 cannot be sent to the server. Each character with this value must be substituted with the string/%DCN000%/,/%DCN005%/,/%DCN036%/,/%DCN096%/,/%DCN124%/, or/%DCN126%/, respectively. The resulting string is the key to be sent to the server.</font></p><p><font size="2">If your programming language of choice doesn't have xor or shift operations on characters, convert them to integers. If it doesn't have a bit shift at all, then<tt>x &lt;&lt; y = x*(2**y)</tt> and<tt>x &gt;&gt; y = x/(2**y)</tt> for all integers<tt>x</tt> and<tt>y</tt> (<tt>**</tt> is the exponent operation or "to the power of"). Be sure to use unsigned values everywhere and do not do sign extension. Shift operations always lose the high or low bit (they are not roll operations!). The<tt>&amp;</tt> (and) and<tt>|</tt> (or) operations are all logical, not boolean (eg.<tt>6 &amp; 13 = 4</tt>, not<tt>1</tt>).</font></p><p><font size="2">When the hub connects to the hublist, it must undergo a similar Lock/Key negotiation. The&lt;key&gt; calculation is the same, but the special number 5 in the second step is replaced with the following value is not computed from the hub's listening port, but rather the random outgoing port that the winsock selects.<tt>localport</tt>:</font></p><p><font size="2"><tt> ((localport&gt;&gt;8) + (localport &amp; 255)) &amp; 255</tt></font></p><hr><a name="AppendixB"></a><p>&lt;<a href="http://mutor.no-ip.com:413/protocol.htm#NavBar">Navigation Bar</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Introduction">Introduction</a> / <a href="http://mutor.no-ip.com:413/protocol.htm#Contents">Contents</a>&gt;</p><h2>Appendix B: Creating a Lock</h2><p><font size="2">Creating a Lock is much easier than decoding one. There are only a few things to keep in mind when creating a Lock.</font></p><p><font size="2">First the Lock should be between 80 and 134 ascii characters long but it does not have to be.</font></p><p><font size="2">Second the Pk should always be 16 ascii characters long but like the lock this is just a suggested length.</font></p><p><font size="2">Third the characters with the decimal ASCII values of 0, 5, 36, 96, 124, and 126 must be substituted with the string<br>/%DCN000%/,/%DCN005%/,/%DCN036%/,/%DCN096%/,/%DCN124%/, or/%DCN126%/, respectively.</font></p><p><font size="2">First we must create the actual Lock you can use random ascii characters for this.</font></p><pre><font size="2">for(int i = 0; i &lt; RandLenOfLock; i++)
+{
+	lock[i] = (char)(94.0 * Math.random() + 33);
+}</font></pre><p><font size="2">Now that the lock has been created lets create our Pk. Because there are so many Direct Connect clients popping up its probably a good idea to include your client type and version instead of a random Pk.</font></p><pre><font size="2">for(int i = 0; i &lt; 16; i++)
+{
+	pk[i] = (char)(94.0 * Math.random() + 33);
+}</font></pre><p><font size="2">There you go now all you have to do is send the data using the correct syntax.</font></p>
+</hash></hash></bytes></errordescription></compressed></bytes></filename></numbytes></start></filename></numbytes></start></body></html>

@@ -1,0 +1,44 @@
+* Coded By ZOseZEro @ Latvia
+
+func LockToKey
+        para pcLock
+        priv Lock2Key, TLock2Key, TChar, i
+        Lock2Key=""
+        If Len(pcLock)<3
+      retu(Left("BROKENCLIENT", Len(pcLock)))
+    EndIf
+
+    TLock2Key = Chr(lXor(lXor(lXor(Asc(Left(pcLock, 1)), ;
+                                   Asc(Right(pcLock, 1))), ;
+                              Asc(substr(pcLock, Len(pcLock) - 1, 1))), ;
+                         5))
+    For i = 2 To Len(pcLock)
+        TLock2Key = TLock2Key + Chr(lXor(Asc(substr(pcLock, i, 1)), ;
+                                                                         Asc(substr(pcLock, i - 1, 1))))
+    Next
+    For i = 1 To Len(TLock2Key)
+        TChar = Asc(substr(TLock2Key, i, 1))
+        TChar = TChar * 16 + int(TChar / 16) &&Swap bits 11110000 -> 00001111
+        TChar = mod(TChar, 256)
+        If TChar = 0 Or TChar = 5 Or TChar = 36 Or TChar = 96 Or TChar = 124 Or TChar = 126
+            Lock2Key = Lock2Key + "/%DCN" + Right("000" + alltrim(str(TChar)),3) + "%/"
+        Else
+            Lock2Key = Lock2Key + Chr(TChar)
+        EndIf
+    Next
+    retu(Lock2Key)
+End func
+
+func lXor
+        para n1,n2
+        priv x,ret
+        ret=0
+        for x=1 to 8
+                if mod(n1,2) + mod(n2,2)=1
+                        ret=ret+2^(x-1)
+                endif
+            n1=int(n1/2)
+            n2=int(n2/2)
+        next
+        retu (ret)
+end func

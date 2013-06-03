@@ -1,0 +1,47 @@
+//* Powered By m4st3rB [Poland] m4st3b@o2.pl
+// This version requires you to cut off the "$Lock" and "Pk=..." parts before decoding the lock code to Key
+
+
+//key1
+LockLen=Lock.Length();
+char L1,Ln1,Ln2=Lock[LockLen-2];
+L1=Lock[1];
+Ln1=Lock[LockLen-1];
+Key1=Char(L1)^Char(Ln1)^Char(Ln2)^5;
+Key1=((Char(Key1)<<4) & 240 ) | ((Char(Key1)>>4) & 15 );   // nibble swap
+switch (Key1){
+case 0: Key="/%DCN000%/";
+break;
+case 5: Key="/%DCN005%/";
+break;
+case 36: Key="/%DCN036%/";
+break;
+case 96: Key="/%DCN096%/";
+break;
+case 124: Key="/%DCN124%/";
+break;
+case 126: Key="/%DCN126%/";
+break;
+default:  Key=Char(Key1);
+}
+// keyi
+for (int i=2;i<LockLen;i++){
+L1=Lock[i],Ln1=Lock[i-1];
+Keyi=Char(L1)^Char(Ln1);
+Keyi=((Char(Keyi)<<4) & 240 ) | ((Char(Keyi)>>4) & 15 ); // nibble swap
+switch (Keyi){
+case 0: Key=Key+"/%DCN000%/";
+break;
+case 5: Key=Key+"/%DCN005%/";
+break;
+case 36: Key=Key+"/%DCN036%/";
+break;
+case 96: Key=Key+"/%DCN096%/";
+break;
+case 124: Key=Key+"/%DCN124%/";
+break;
+case 126: Key=Key+"/%DCN126%/";
+break;
+default:  Key=Key+Char(Keyi);
+}
+}

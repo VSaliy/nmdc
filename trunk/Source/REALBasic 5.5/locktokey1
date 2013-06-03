@@ -1,0 +1,43 @@
+// Add a function:  Protected Function Lock2Key(sLock As String) As String
+  // REALBasic Lock To Key converter
+  // Written in REALBasic 5.5 Pro by Bluebear
+  // http://www.thewildplace.dk/cache
+  // Rember to use the correct encoding for incoming/outgoing data
+  Dim Lck As String, key As String
+  Dim iChar As Integer, iPos As Integer
+
+  Lck = Replace(sLock, "$Lock ", "")
+  iPos = InStr(1, Lck, " ")
+  If iPos > 0 Then Lck = Left(Lck, iPos - 1)
+
+  // 2005  //iChar = Bitwise.BitXor(Asc(Lck), Asc(Right(Lck, 1)), Asc(Right(Lck, 2)), 5)
+  iChar = Bitwise.BitXor(Bitwise.BitXor(Asc(Lck), Asc(Right(Lck, 1))),Bitwise.BitXor(Asc(Right(Lck, 2)), 5))
+
+
+  iChar = Bitwise.BitXor((iChar / 16), (iChar * 16))
+  While iChar > 255
+    iChar = iChar - 256
+  Wend
+  Select Case iChar
+  Case 0, 5, 36, 96, 124, 126
+    key = "/%DCN" + Right("00" + CStr(iChar), 3) + "%/"
+  Case Else
+    key = Chr(iChar)
+  End Select
+
+  For iPos=2 To Len(Lck)
+
+    iChar = Bitwise.BitXor(Asc(Mid(Lck, iPos, 1)), Asc(Mid(Lck, iPos - 1, 1)))
+    iChar = Bitwise.BitXor((iChar / 16), (iChar * 16))
+    While iChar > 255
+      iChar = iChar - 256
+    Wend
+    Select Case iChar
+    Case 0, 5, 36, 96, 124, 126
+      key = key + "/%DCN" + Right("00" + CStr(iChar), 3) + "%/"
+    Case Else
+      key = key + Chr(iChar)
+    End Select
+
+  Next
+  Return key

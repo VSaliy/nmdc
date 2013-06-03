@@ -1,0 +1,1 @@
+The sites and pages included here are references to descriptions of the NMDC protocol. Copyright and other trademarks are by respective owner. This is a simple mirror of each respective site and their pages.

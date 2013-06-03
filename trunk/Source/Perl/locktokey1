@@ -1,0 +1,32 @@
+sub lock2key
+{
+   my @lock = split( // , shift );
+   my $i;
+   my @key = ();
+   # convert to ordinal
+   foreach( @lock ) {
+       $_ = ord;
+   }
+   # calc key[0] with some xor-ing magic
+   push( @key , $lock[0] ^ 5 );
+   # calc rest of key with some other xor-ing magic
+   for( $i = 1 ; $i < @lock ; $i++ ) {
+       push( @key , ( $lock[$i] ^ $lock[$i - 1] ) );
+   }
+   # nibble swapping
+   for( $i = 0 ; $i < @key ; $i++ ) {
+       $key[$i] = ( (($key[$i] << 4) & 240) | ( ($key[$i] >> 4) & 15 )) & 0xff;
+   }
+   #temp[0] = (u_int8_t)(temp[0] ^ temp[aLock.length()-1]);
+   $key[0] = $key[0] ^ $key[ @key - 1 ];
+   # escape some
+   foreach( @key ) {
+       if ( $_ == 0 || $_ == 5 || $_ == 36 || $_ == 96 || $_ == 124 || $_ == 126 ) {
+           $_ = sprintf( '/%%DCN%03i%%/' , $_ );
+       } else {
+           $_ = chr;
+       }
+   }
+   # done
+   return join( "" , @key );
+}

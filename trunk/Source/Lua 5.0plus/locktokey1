@@ -1,0 +1,45 @@
+-- Coded by Mardeg
+function bODD(x)
+       return x ~= math.floor(x / 2) * 2
+end
+
+function bitwise(x, y, bw)
+       local c, p = 0, 1
+       while x > 0 or y > 0 do
+           if bw == "xor" then
+               if (bODD(x) and not bODD(y)) or (bODD(y) and not bODD(x)) then
+                       c = c + p
+               end
+           elseif bw == "and" then
+               if bODD(x) and bODD(y) then
+                       c = c + p
+               end
+           elseif bw == "or" then
+               if bODD(x) or bODD(y) then
+                       c = c + p
+               end
+           end
+           x = math.floor(x / 2)
+           y = math.floor(y / 2)
+           p = p * 2
+       end
+       return c
+end
+
+function nibbleswap(bits)
+        return bitwise(bitwise(bits*(2^4),240,"and"),bitwise(math.floor(bits/(2^4)),15,"and"),"or")
+end
+
+function lock2key(lock)
+        local key = {}
+        table.insert(key,bitwise(bitwise(bitwise(string.byte(lock,1),string.byte(lock,-1),"xor"),string.byte(lock,-2),"xor"),5,"xor"))
+        for i=2,string.len(lock),1 do
+                table.insert(key,bitwise(string.byte(lock,i),string.byte(lock,i - 1),"xor"))
+        end
+        local g = {["5"]=1,["0"]=1,["36"]=1,["96"]=1,["124"]=1,["126"]=1}
+        for i=1,table.getn(key),1 do
+                local b = nibbleswap(rawget(key,i)) 
+                rawset(key,i,(g[tostring(b)] and string.format("/%%DCN%03d%%/",b) or string.char(b)))
+        end
+        return table.concat(key)
+end

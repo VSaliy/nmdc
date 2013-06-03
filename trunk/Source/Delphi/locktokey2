@@ -1,0 +1,38 @@
+// By ParadoxHeart
+// Ported from JavaDC's key generator
+
+// This version requires you to cut off the $Lock and pk parts *before* passing the lock code to LockToKey
+// I'll post a version that deals with those itself when I get around to it. :p
+
+uses
+  SysUtils, StrUtils;
+
+function LockToKey(const LockCode: String): String;
+var
+  i, j: Integer;
+begin
+  if Length(LockCode) < 3 then
+  begin
+    Result:= 'ERR_INVALIDLOCK';
+    Exit;
+  end;
+  for i:= 1 to Length(LockCode) do
+  begin
+    j:= Ord(LockCode[i]);
+    if i = 1 then
+      j:= j xor 5
+    else
+      j:= j xor Ord(LockCode[i - 1]);
+    j:= j + ((j mod 17) * 15);
+    while j > 255 do
+      Dec(j, 255);
+    Result:= Result + Chr(j);
+  end;
+  Result[1]:= Chr(Ord(Result[1]) xor Ord(Result[Length(Result)]));
+  AnsiReplaceStr(Result, #0, '/%DCN000%/');
+  AnsiReplaceStr(Result, #5, '/%DCN005%/');
+  AnsiReplaceStr(Result, #36, '/%DCN036%/');
+  AnsiReplaceStr(Result, #96, '/%DCN096%/');
+  AnsiReplaceStr(Result, #124, '/%DCN124%/');
+  AnsiReplaceStr(Result, #126, '/%DCN126%/');
+end;

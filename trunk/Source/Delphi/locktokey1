@@ -1,0 +1,27 @@
+uses StrUtils;
+	//------------------------------------------------------------------------------
+	function EscapeDCN(s: string): string;
+	//------------------------------------------------------------------------------
+	begin
+		s := AnsiReplaceStr(s, #$00, '/%DCN000%/');
+		s := AnsiReplaceStr(s, #$05, '/%DCN005%/');
+		s := AnsiReplaceStr(s, #$24, '/%DCN036%/');
+		s := AnsiReplaceStr(s, #$60, '/%DCN096%/');
+		s := AnsiReplaceStr(s, #$7C, '/%DCN124%/');
+		s := AnsiReplaceStr(s, #$7E, '/%DCN126%/');
+		Result := s;
+	end;
+	//------------------------------------------------------------------------------
+	function LockToKey(lock: string): string;
+	//------------------------------------------------------------------------------
+	var i, len: integer;
+	begin
+		len := Length(lock);
+		SetLength(Result, len); // create the buffer to store key
+		for i := 2 to len do // create the key-data
+			Result[i] := Chr(Ord(lock[i]) xor Ord(lock[i-1]));
+		Result[1] := Chr(Ord(lock[1]) xor Byte(lock[len]) xor Ord(lock[len-1]) xor 5);
+		for i := 1 to len do // nibble-swap the key
+			Result[i] := Chr(((Ord(Result[i]) shl 4) and $F0) or ((Ord(Result[i]) shr 4) and $0F));
+		Result := escapeDCN(Result);
+	end;

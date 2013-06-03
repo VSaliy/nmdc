@@ -1,0 +1,27 @@
+// Coded by Mardeg, tidied up by Andy Newman
+static lock2key(lock)
+{
+        f := [func (c)
+        {
+                g := [struct
+                        (0) = "/%DCN000%/",
+                        (5) = "/%DCN005%/",
+                        (36) = "/%DCN036%/",
+                        (96) = "/%DCN096%/",
+                        (124) = "/%DCN124%/",
+                        (126) = "/%DCN126%/"
+                ];
+                c = ((c << 4) & 0xf0) | ((c >> 4) & 15);
+                b := g[c];
+                return b == NULL ? tochar(c) : b;
+        }];
+
+        len := nels(lock);
+        if (len < 3) return "BROKENCLIENT";
+        key := array(f(toint(lock[0]) ^ toint(lock[len-1]) ^ toint(lock[len-2]) ^ 5));
+        for (i := 1; i < len; ++i)
+        {
+                push(key, f(toint(lock[i]) ^ toint(lock[i - 1])));
+        }
+        return implode(key);
+}
