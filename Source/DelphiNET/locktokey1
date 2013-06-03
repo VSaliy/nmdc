@@ -1,0 +1,46 @@
+// By jazper jazper@zaboo.net
+
+// Ported ParadoxHearts code(above)
+// This function also assumes you have stripped $Lock and remove everything from Pk= onwards
+uses
+  System.Text;
+
+type TBuffArray: Array of byte;
+
+function TDCHub.LockToKey(Data: TBuffArray): &string;
+var
+  i,j,Len: Int32;
+  Key: TBuffArray;
+begin
+  Len := System.Array(Data).Length;
+  SetLength(Key,Len);
+  if Len < 3 then
+  begin
+    Result:= 'ERR_INVALIDLOCK';
+    Exit;
+  end;
+  for i:= 0 to Len - 1 do
+  begin
+    j:= data[i];
+    if i = 0 then
+      j:= j xor 5
+    else
+      j:= j xor data[i - 1];
+    j:= j + ((j mod 17) * 15);
+    while j > 255 do
+      Dec(j, 255);
+    Key[i] := j;
+  end;
+  Key[0]:= Key[0] xor Key[Len-1];
+  //
+  // Convert to string so we can replace some char's
+  Result := Encoding.Default.GetString(Key);
+  // protocol has unaccepted char's, we must replace them
+  Result := Result.Replace(#0,'/%DCN000%/');
+  Result := Result.Replace(#5,'/%DCN005%/');
+  Result := Result.Replace(#36,'/%DCN036%/');
+  Result := Result.Replace(#96,'/%DCN096%/');
+  Result := Result.Replace(#124,'/%DCN124%/');
+  Result := Result.Replace(#126,'/%DCN126%/');
+
+end;

@@ -1,0 +1,173 @@
+﻿(last updated 2013-06-03)
+
+Resource Identifier (RI) Scheme name: dchub 
+Status: Permanent
+
+Scheme syntax:
+
+   The syntax of the 'dchub' URI scheme is specified below in ABNF specified in RFC 5234:
+      
+	  dchub-URI   = scheme "://" authority ["/" [path]]
+	  scheme      = "dchub"
+	  authority   = hostname [":" port]
+	  hostname    = hostname as specified in RFC 3986
+	  port        = port as specified in RFC 3986, defaults to 411
+	  path        = user-path ["/" [file-path]]
+	  user-path   = the name of a user
+	  file-path   = the path to a file or directory
+
+   The (same) syntax of the 'dchub' URI scheme is specified below in a less verbose form:
+
+	  dchub://<host>[:<port>][/[<user>[/[<path>]]]]
+
+   The hostname MUST be specified.
+
+   Examples:
+      dchub://example.com
+      dchub://example.com:666
+      dchub://example.com/John/uploads/applications/linux.iso
+      dchub://example.com:411/John/uploads/applications/linux.iso
+
+Scheme semantics:
+
+   1. Generic Semantics
+
+   The 'dchub' URI specifies a hub within the Direct Connect (DC) network. The URI may also indicate a user and a file or directory that they share.
+
+   A Neo-Modus Direct Connect (NMDC) client, given an URL, ought to connect to the specified address with the appropriate protocol commands and sequence. 
+   
+   The connected client ought to request a connection to the user via the appropriate commands and sequence.
+
+   The client ought to queue the file or directory, supplied as the file path, via the appropriate commands and sequence. 
+   If the file path is omitted, then the queued file ought to be the user's file list.
+   Path to a directory MUST end in a "/".
+
+Encoding considerations:
+
+   1. Generic Encoding
+
+   The encoding UTF-8 SHALL be used, according to RFC 3986. 
+   
+   URIs originating from hubs MUST be encoded as UTF-8 regardless of hub encoding.
+
+   2. String Comparison
+
+   The 'user' SHOULD be considered case-sensitive but MAY be case-insensitive in hubs that mandate as such.
+
+   The 'file-path' SHOULD be case-insensitive.
+
+   The 'file-path' SHALL be normalized prior to string comparison.
+
+   3. Normalization
+
+   The URI SHOULD be normalized according to RFC 3986 section 6.2.2, with below exceptions.
+
+   Tokens (such as "." and "..") SHALL follow the security considerations of this document.
+
+   Trailing slashes ("/") SHOULD NOT be normalized.
+
+Applications/protocols that use this scheme name:
+
+   1. Generic
+
+   Most Direct Connect clients support the 'dchub' URI scheme (or parts of it).
+
+   All implementations that support the file-path syntax support the user syntax.
+
+   All implementations that support the user syntax support the generic syntax.
+
+   2. File-path Syntax Implementations
+
+   The implementations that support the URI including the file-path syntax are:
+      AirDC++ and derivatives
+      Neo-Modus Direct Connect client
+     
+   3. User Syntax Implementations
+
+   The implementations that support the URI including the user syntax are:
+      DC++ and derivatives
+      Jucy
+
+Interoperability considerations:
+
+   1. Inconsistency of Hub and User Accessibility
+
+   NMDC hubs may impose constraints on connecting clients that NMDC URIs
+   do not encode, including requirements to authenticate with a username
+   and password, to advertise a share of a certain size or composition,
+   or to originate from certain IP addresses. Similarly, a user named in
+   an NMDC URI might not be available to transfer a file, or have
+   removed the specified file from their share. Therefore, software
+   processing an NMDC URI SHOULD anticipate frequent failure.
+
+   2. File-Path
+
+   The file-path reflect the user's shared files and does 
+   NOT reflect a system's underlying file system.
+
+   3. Separator
+
+   Path separator is a slash ("/").
+
+Security considerations:
+   See the protocol specification for generic NMDC security considerations.
+
+   1. Distributed Denial of Service Potential
+
+   The ongoing operation of NMDC's peer to peer connections provides
+   opportunities for both malicious clients on certain hubs and
+   malicious hubs to coordinate clients of those hubs in connecting en
+   masse to an arbitrarily specified IP address and port. Hubs SHOULD
+   mitigate this risk by only relaying such connection requests when
+   they can verify that the IP addresses and ports contained therein
+   belong to clients initiating such peer to peer connection requests.
+   Clients SHOULD effect similar amelioration through both attempting to
+   reconnect only to hubs to which they have initially connected once
+   and by providing upon connection referrer information regarding which
+   hub has relayed to them the IP and port to which they are connecting.
+
+   2. URI Path Encoding
+   Client software SHOULD verify that NMDC URI paths remain within
+   shares by ensuring that "/", "\", ".", ":", "..", and other
+   meaningful tokens either do not appear or appear only where they do
+   not allow unintended behavior. Client software which translates NMDC
+   URIs directly into file system calls, especially, MUST disallow path
+   components of "." and "..".
+
+   In service of such a requirement, clients SHOULD either convert all
+   UTF-8 text they receive to canonical form or check against prohibited
+   and controlled path tokens in any form in which they might appear.
+
+   3. Case-sensitivity Mismatches and Duplicated Shares Entries
+
+   Matches and shares are both accidentally due to differences in filesystem case-sensitivity
+   assumptions and intentionally by malicious clients can arise
+   filelists containing either entirely or up to case
+   identical. Client software SHOULD detect these cases and avoid
+   wasteful downloading.
+
+   4. Semantic Attacks Confusing User and Path URI Elements
+
+   The user and path portions of NMDC URIs overlap in appearance
+   sufficiently to allow malicious construction of URIs which
+   deceive users into navigating to a URI to a client the share of which
+   they would not intentionally view by embeddeding a string resembling
+   a user name within the path. Clients cannot entirely eliminate this
+   risk.
+
+   5. Generic URI Syntax Considerations
+
+   RFC 3986 section 7 and in particular section 7.4, "Rare IP Address
+   Formats", applies to NMDC URIs.
+
+Contact:
+   Registering party: Fredrik Ullner <ullner [at] gmail.com>
+   Scheme creator: Jonathan Hess
+
+Author/Change controller:
+   The registering party or a member of the NMDC project
+
+References:
+   http://nmdc.sourceforge.net/, http://en.wikipedia.org/wiki/Direct_Connect_(file_sharing) 
+
+(file created 2013-02-08)

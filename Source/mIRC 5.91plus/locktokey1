@@ -1,0 +1,15 @@
+; Coded by Mardeg
+alias lock2key {
+ var %gl = $1, %gf = $base($xor($xor($xor($asc($left(%gl,1)),$asc($right(%gl,1))),$asc($left($right(%gl,2),1))),5),10,2,8)
+ var %gt = $+(/,%,DCN005,%,/,./,%,DCN000,%,/,./,%,DCN036,%,/,./,%,DCN096,%,/,./,%,DCN124,%,/,./,%,DCN126,%,/)
+ var %gb = 2, %ge = $len(%gl), %gn = 5.0.36.96.124.126, %gk
+ %gf = $base($+($right(%gf,4),$left(%gf,4)),2,10)
+ %gf = $iif($findtok(%gn,%gf,1,46),$gettok(%gt,$ifmatch,46),$chr(%gf))
+ while (%gb <= %ge) {
+   %gk = $base($xor($asc($mid(%gl,%gb,1)),$asc($mid(%gl,$calc(%gb - 1),1))),10,2,8)
+   %gk = $base($+($right(%gk,4),$left(%gk,4)),2,10)
+   %gf = $+(%gf,$iif($findtok(%gn,%gk,1,46),$gettok(%gt,$ifmatch,46),$chr(%gk)))
+   inc %gb
+ }
+ return %gf
+}

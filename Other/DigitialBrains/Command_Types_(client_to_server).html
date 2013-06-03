@@ -1,0 +1,640 @@
+<html>
+<head>
+	<title>Direct Connect Protocol Documentation</title>
+	<link rel=stylesheet href="/web/20040225141541cs_/http://wza.digitalbrains.com/DC/doc/screen.css" type="text/css" media=screen>
+</head>
+
+<body>
+<!-- BEGIN WAYBACK TOOLBAR INSERT -->
+
+<script type="text/javascript" src="/static/js/disclaim-element.js" ></script>
+<script type="text/javascript" src="/static/js/graph-calc.js" ></script>
+<script type="text/javascript" src="/static/jflot/jquery.min.js" ></script>
+<script type="text/javascript">
+//<![CDATA[
+var firstDate = 820454400000;
+var lastDate = 1388534399999;
+var wbPrefix = "/web/";
+var wbCurrentUrl = "http:\/\/wza.digitalbrains.com\/DC\/doc\/Command_Types_(client_to_server).html";
+
+var curYear = -1;
+var curMonth = -1;
+var yearCount = 18;
+var firstYear = 1996;
+var imgWidth = 450;
+var yearImgWidth = 25;
+var monthImgWidth = 2;
+var trackerVal = "none";
+var displayDay = "25";
+var displayMonth = "Feb";
+var displayYear = "2004";
+var prettyMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+function showTrackers(val) {
+	if(val == trackerVal) {
+		return;
+	}
+	if(val == "inline") {
+		document.getElementById("displayYearEl").style.color = "#ec008c";
+		document.getElementById("displayMonthEl").style.color = "#ec008c";
+		document.getElementById("displayDayEl").style.color = "#ec008c";		
+	} else {
+		document.getElementById("displayYearEl").innerHTML = displayYear;
+		document.getElementById("displayYearEl").style.color = "#ff0";
+		document.getElementById("displayMonthEl").innerHTML = displayMonth;
+		document.getElementById("displayMonthEl").style.color = "#ff0";
+		document.getElementById("displayDayEl").innerHTML = displayDay;
+		document.getElementById("displayDayEl").style.color = "#ff0";
+	}
+   document.getElementById("wbMouseTrackYearImg").style.display = val;
+   document.getElementById("wbMouseTrackMonthImg").style.display = val;
+   trackerVal = val;
+}
+function getElementX2(obj) {
+	var thing = jQuery(obj);
+	if((thing == undefined) 
+			|| (typeof thing == "undefined") 
+			|| (typeof thing.offset == "undefined")) {
+		return getElementX(obj);
+	}
+	return Math.round(thing.offset().left);
+}
+function trackMouseMove(event,element) {
+
+   var eventX = getEventX(event);
+   var elementX = getElementX2(element);
+   var xOff = eventX - elementX;
+	if(xOff < 0) {
+		xOff = 0;
+	} else if(xOff > imgWidth) {
+		xOff = imgWidth;
+	}
+   var monthOff = xOff % yearImgWidth;
+
+   var year = Math.floor(xOff / yearImgWidth);
+	var yearStart = year * yearImgWidth;
+   var monthOfYear = Math.floor(monthOff / monthImgWidth);
+   if(monthOfYear > 11) {
+       monthOfYear = 11;
+   }
+   // 1 extra border pixel at the left edge of the year:
+   var month = (year * 12) + monthOfYear;
+   var day = 1;
+	if(monthOff % 2 == 1) {
+		day = 15;
+	}
+	var dateString = 
+		zeroPad(year + firstYear) + 
+		zeroPad(monthOfYear+1,2) +
+		zeroPad(day,2) + "000000";
+
+	var monthString = prettyMonths[monthOfYear];
+	document.getElementById("displayYearEl").innerHTML = year + 1996;
+	document.getElementById("displayMonthEl").innerHTML = monthString;
+	// looks too jarring when it changes..
+	//document.getElementById("displayDayEl").innerHTML = zeroPad(day,2);
+
+	var url = wbPrefix + dateString + '/' +  wbCurrentUrl;
+	document.getElementById('wm-graph-anchor').href = url;
+
+   //document.getElementById("wmtbURL").value="evX("+eventX+") elX("+elementX+") xO("+xOff+") y("+year+") m("+month+") monthOff("+monthOff+") DS("+dateString+") Moy("+monthOfYear+") ms("+monthString+")";
+   if(curYear != year) {
+       var yrOff = year * yearImgWidth;
+       document.getElementById("wbMouseTrackYearImg").style.left = yrOff + "px";
+       curYear = year;
+   }
+   if(curMonth != month) {
+       var mtOff = year + (month * monthImgWidth) + 1;
+       document.getElementById("wbMouseTrackMonthImg").style.left = mtOff + "px";
+       curMonth = month;
+   }
+}
+//]]>
+</script>
+
+<style type="text/css">body{margin-top:0!important;padding-top:0!important;min-width:800px!important;}#wm-ipp a:hover{text-decoration:underline!important;}</style>
+<div id="wm-ipp" style="display:none; position:relative;padding:0 5px;min-height:70px;min-width:800px; z-index:9000;">
+<div id="wm-ipp-inside" style="position:fixed;padding:0!important;margin:0!important;width:97%;min-width:780px;border:5px solid #000;border-top:none;background-image:url(/static/images/toolbar/wm_tb_bk_trns.png);text-align:center;-moz-box-shadow:1px 1px 3px #333;-webkit-box-shadow:1px 1px 3px #333;box-shadow:1px 1px 3px #333;font-size:11px!important;font-family:'Lucida Grande','Arial',sans-serif!important;">
+   <table style="border-collapse:collapse;margin:0;padding:0;width:100%;"><tbody><tr>
+   <td style="padding:10px;vertical-align:top;min-width:110px;">
+   <a href="/web/" title="Wayback Machine home page" style="background-color:transparent;border:none;"><img src="/static/images/toolbar/wayback-toolbar-logo.png" alt="Wayback Machine" width="110" height="39" border="0"/></a>
+   </td>
+   <td style="padding:0!important;text-align:center;vertical-align:top;width:100%;">
+
+       <table style="border-collapse:collapse;margin:0 auto;padding:0;width:570px;"><tbody><tr>
+       <td style="padding:3px 0;" colspan="2">
+       <form target="_top" method="get" action="/web/form-submit.jsp" name="wmtb" id="wmtb" style="margin:0!important;padding:0!important;"><input type="text" name="url" id="wmtbURL" value="http://wza.digitalbrains.com/DC/doc/Command_Types_(client_to_server).html" style="width:400px;font-size:11px;font-family:'Lucida Grande','Arial',sans-serif;" onfocus="javascript:this.focus();this.select();" /><input type="hidden" name="type" value="replay" /><input type="hidden" name="date" value="20040225141541" /><input type="submit" value="Go" style="font-size:11px;font-family:'Lucida Grande','Arial',sans-serif;margin-left:5px;" /><span id="wm_tb_options" style="display:block;"></span></form>
+       </td>
+       <td style="vertical-align:bottom;padding:5px 0 0 0!important;" rowspan="2">
+           <table style="border-collapse:collapse;width:110px;color:#99a;font-family:'Helvetica','Lucida Grande','Arial',sans-serif;"><tbody>
+			
+           <!-- NEXT/PREV MONTH NAV AND MONTH INDICATOR -->
+           <tr style="width:110px;height:16px;font-size:10px!important;">
+           	<td style="padding-right:9px;font-size:11px!important;font-weight:bold;text-transform:uppercase;text-align:right;white-space:nowrap;overflow:visible;" nowrap="nowrap">
+               
+		                <a href="/web/20031031064519/http://wza.digitalbrains.com/DC/doc/Command_Types_(client_to_server).html" style="text-decoration:none;color:#33f;font-weight:bold;background-color:transparent;border:none;" title="31 Oct 2003"><strong>OCT</strong></a>
+		                
+               </td>
+               <td id="displayMonthEl" style="background:#000;color:#ff0;font-size:11px!important;font-weight:bold;text-transform:uppercase;width:34px;height:15px;padding-top:1px;text-align:center;" title="You are here: 14:15:41 Feb 25, 2004">FEB</td>
+				<td style="padding-left:9px;font-size:11px!important;font-weight:bold;text-transform:uppercase;white-space:nowrap;overflow:visible;" nowrap="nowrap">
+               
+		                <a href="/web/20040703054912/http://wza.digitalbrains.com/DC/doc/Command_Types_(client_to_server).html" style="text-decoration:none;color:#33f;font-weight:bold;background-color:transparent;border:none;" title="3 Jul 2004"><strong>JUL</strong></a>
+		                
+               </td>
+           </tr>
+
+           <!-- NEXT/PREV CAPTURE NAV AND DAY OF MONTH INDICATOR -->
+           <tr>
+               <td style="padding-right:9px;white-space:nowrap;overflow:visible;text-align:right!important;vertical-align:middle!important;" nowrap="nowrap">
+               
+		                <a href="/web/20031031064519/http://wza.digitalbrains.com/DC/doc/Command_Types_(client_to_server).html" title="6:45:19 Oct 31, 2003" style="background-color:transparent;border:none;"><img src="/static/images/toolbar/wm_tb_prv_on.png" alt="Previous capture" width="14" height="16" border="0" /></a>
+		                
+               </td>
+               <td id="displayDayEl" style="background:#000;color:#ff0;width:34px;height:24px;padding:2px 0 0 0;text-align:center;font-size:24px;font-weight: bold;" title="You are here: 14:15:41 Feb 25, 2004">25</td>
+				<td style="padding-left:9px;white-space:nowrap;overflow:visible;text-align:left!important;vertical-align:middle!important;" nowrap="nowrap">
+               
+		                <a href="/web/20040703054912/http://wza.digitalbrains.com/DC/doc/Command_Types_(client_to_server).html" title="5:49:12 Jul 3, 2004" style="background-color:transparent;border:none;"><img src="/static/images/toolbar/wm_tb_nxt_on.png" alt="Next capture" width="14" height="16" border="0"/></a>
+		                
+			    </td>
+           </tr>
+
+           <!-- NEXT/PREV YEAR NAV AND YEAR INDICATOR -->
+           <tr style="width:110px;height:13px;font-size:9px!important;">
+				<td style="padding-right:9px;font-size:11px!important;font-weight: bold;text-align:right;white-space:nowrap;overflow:visible;" nowrap="nowrap">
+               
+                       2003
+                       
+               </td>
+               <td id="displayYearEl" style="background:#000;color:#ff0;font-size:11px!important;font-weight: bold;padding-top:1px;width:34px;height:13px;text-align:center;" title="You are here: 14:15:41 Feb 25, 2004">2004</td>
+				<td style="padding-left:9px;font-size:11px!important;font-weight: bold;white-space:nowrap;overflow:visible;" nowrap="nowrap">
+               
+		                <a href="/web/20070206071814/http://wza.digitalbrains.com/DC/doc/Command_Types_(client_to_server).html" style="text-decoration:none;color:#33f;font-weight:bold;background-color:transparent;border:none;" title="6 Feb 2007"><strong>2007</strong></a>
+		                
+				</td>
+           </tr>
+           </tbody></table>
+       </td>
+
+       </tr>
+       <tr>
+       <td style="vertical-align:middle;padding:0!important;">
+           <a href="/web/20040225141541*/http://wza.digitalbrains.com/DC/doc/Command_Types_(client_to_server).html" style="color:#33f;font-size:11px;font-weight:bold;background-color:transparent;border:none;" title="See a list of every capture for this URL"><strong>10 captures</strong></a>
+           <div style="margin:0!important;padding:0!important;color:#666;font-size:9px;padding-top:2px!important;white-space:nowrap;" title="Timespan for captures of this URL">14 May 03 - 6 Feb 07</div>
+       </td>
+       <td style="padding:0!important;">
+       <a style="position:relative; white-space:nowrap; width:450px;height:27px;" href="" id="wm-graph-anchor">
+       <div id="wm-ipp-sparkline" style="position:relative; white-space:nowrap; width:450px;height:27px;background-color:#fff;cursor:pointer;border-right:1px solid #ccc;" title="Explore captures for this URL">
+			<img id="sparklineImgId" style="position:absolute; z-index:9012; top:0px; left:0px;"
+				onmouseover="showTrackers('inline');" 
+				onmouseout="showTrackers('none');"
+				onmousemove="trackMouseMove(event,this)"
+				alt="sparklines"
+				width="450"
+				height="27"
+				border="0"
+				src="/web/jsp/graph.jsp?graphdata=450_27_1996:-1:000000000000_1997:-1:000000000000_1998:-1:000000000000_1999:-1:000000000000_2000:-1:000000000000_2001:-1:000000000000_2002:-1:000000000000_2003:-1:000010101100_2004:1:010000110100_2005:-1:100000000000_2006:-1:000000000000_2007:-1:010000000000_2008:-1:000000000000_2009:-1:000000000000_2010:-1:000000000000_2011:-1:000000000000_2012:-1:000000000000_2013:-1:000000000000"></img>
+			<img id="wbMouseTrackYearImg" 
+				style="display:none; position:absolute; z-index:9010;"
+				width="25" 
+				height="27"
+				border="0"
+				src="/static/images/toolbar/transp-yellow-pixel.png"></img>
+			<img id="wbMouseTrackMonthImg"
+				style="display:none; position:absolute; z-index:9011; " 
+				width="2"
+				height="27" 
+				border="0"
+				src="/static/images/toolbar/transp-red-pixel.png"></img>
+       </div>
+		</a>
+
+       </td>
+       </tr></tbody></table>
+   </td>
+   <td style="text-align:right;padding:5px;width:65px;font-size:11px!important;">
+       <a href="javascript:;" onclick="document.getElementById('wm-ipp').style.display='none';" style="display:block;padding-right:18px;background:url(/static/images/toolbar/wm_tb_close.png) no-repeat 100% 0;color:#33f;font-family:'Lucida Grande','Arial',sans-serif;margin-bottom:23px;background-color:transparent;border:none;" title="Close the toolbar">Close</a>
+       <a href="http://faq.web.archive.org/" style="display:block;padding-right:18px;background:url(/static/images/toolbar/wm_tb_help.png) no-repeat 100% 0;color:#33f;font-family:'Lucida Grande','Arial',sans-serif;background-color:transparent;border:none;" title="Get some help using the Wayback Machine">Help</a>
+   </td>
+   </tr></tbody></table>
+
+</div>
+</div>
+<script type="text/javascript">
+ var wmDisclaimBanner = document.getElementById("wm-ipp");
+ if(wmDisclaimBanner != null) {
+   disclaimElement(wmDisclaimBanner);
+ }
+</script>
+<!-- END WAYBACK TOOLBAR INSERT -->
+
+	&lt;<a href="/web/20040225141541/http://wza.digitalbrains.com/DC/doc/Introduction.html">Introduction / Contents</a>&gt;
+	<h1>Command Types (client to server)</h1>
+	
+	<p>Direct Connect uses TCP for client to server communication.<br>
+	The following section describes the format of the Commands, Each field is denoted with <span class=variable>&lt; &gt;</span>.<br>
+	The fields in the command are separated by a single space character (ASCII 32).<br>
+	And each Command ends with a <span class=command>|</span> (pipe).  All Commands are case sensitive.</p>
+	
+	
+	<h2>$Hello</h2>
+
+	<p>Shortly after a new user, <span class=variable>&lt;nick&gt;</span> logs in, the server must send,</p>
+	<blockquote>
+		$Hello <span class=variable>&lt;nick&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;nick&gt;</span> is the nick of a recently logged in user.
+	</ul>
+    
+	<p>This indicates <span class=variable>&lt;nick&gt;</span> has logged in.  If the new user is
+	an operator, the server must additionally send a <span class=command>$OpList</span> command
+	to all users (documented at <span class=command>$GetNickList</span>).</p>
+
+	<p>Each client should add <span class=variable>&lt;nick&gt;</span> to its list of hub users
+	and, if <span class=command>$OpList</span> is also received, update its list of operators.
+	The new client must reply:</p>
+	
+	<blockquote>
+		$Version <span class=variable>&lt;version&gt;</span><br>
+	</blockquote>
+	
+	<ul>
+		<li><span class=variable>&lt;version&gt;</span> is 1.0091 by default.
+	</ul>
+
+    
+	<h2>$GetNickList</h2>
+
+	<p>To obtain a list of other users' nicks, the client may send,</p>
+	<blockquote>
+		$GetNickList
+	</blockquote>
+
+	<p>to which the server must reply,</p>
+	<blockquote>
+		$NickList <span class=variable>&lt;nick1&gt;</span>$$<span class=variable>&lt;nick2&gt;</span>$$<span class=variable>&lt;nick3&gt;</span>$$...<br>
+		$OpList <span class=variable>&lt;op1&gt;</span>$$<span class=variable>&lt;op2&gt;</span>$$<span class=variable>&lt;op3&gt;</span>$$...
+	</blockquote>
+    
+	<ul>
+	<li><span class=variable>&lt;nick1&gt;</span>, <span class=variable>&lt;nick2&gt;</span>, <span class=variable>&lt;nick3&gt;</span>, ... compose a $$-separated list of hub users' nicks (including operators).  After the final nick there is a <span class=command>$$</span>.
+		<li><span class=variable>&lt;op1&gt;</span>$$<span class=variable>&lt;op2&gt;</span>$$<span class=variable>&lt;op3&gt;</span>$$... is a $$-separated list of connected users that are operators.  After the final nick there is a <span class=command>$$</span>.  This list is a subset of the <span class=command>$NickList</span>.  If there are no connected operators, the server must send "<span class=command>$OpList </span>"
+	</ul>
+
+	<p>If a client receives a <span class=command>$OpList</span> command listing its own nick, it
+	should enable the "Redirect User" and "Kick" functions.</p>
+
+
+	<h2>$MyINFO (Client to Server)</h2>
+
+	<p>Shortly after logging in, the client must send,</p>
+	<blockquote>
+		$MyINFO $ALL <span class=variable>&lt;nick&gt;</span> <span class=variable>&lt;interest&gt;</span>$ $<span class=variable>&lt;speed&gt;</span>$<span class=variable>&lt;e-mail&gt;</span>$<span class=variable>&lt;sharesize&gt;</span>$
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;nick&gt;</span> is the client's nick.
+		<li><span class=variable>&lt;interest&gt;</span> is a string describing the user's interest and may be "" (spaces permitted).
+		<li><span class=variable>&lt;speed&gt;</span> is a string describing the client's internet connection selected from "56Kbps", "Satellite", "DSL", "Cable", "LAN(T1)", and "LAN(T3)"	followed by a byte indicating the speed class.  The value of the byte is selected from at least 1 for 56Kbps, 3 for cable or DSL, or 7, also for DSL.
+		<li><span class=variable>&lt;e-mail&gt;</span> is nick's e-mail address and may be "".
+		<li><span class=variable>&lt;sharesize&gt;</span> is the number of bytes this client shares as a string.
+	</ul>
+
+	<font color=red>XXX the max size of the description is chosen by the hub implementation.<br>
+	once again (see $ValidateNick in <a href="/web/20040225141541/http://wza.digitalbrains.com/DC/doc/Client2Server_Login.html">Client to Server Login</a>)
+	all characters except $ and | are allowed(?) but some (chars &lt; 0x20) may cause problems.
+	(DCH++ v0.15 does not allow chars &lt; 0x20)<br>
+	NOTE: some hub implementations do not consider a client to be in a logged in state before it has sent
+	a $MyINFO. this is the correct behaviour, and the NMDC hub is flawed in this respect. /sed</font><br>
+
+	<p>The server must pass this message to all users of the hub,
+	including the sender. The client should resend it's MyINFO
+	when the information changes.  SX
+	says (if I understand right) that the last byte of the speed
+	is selected from the ascii values of 1 for normal, 2 for away, 
+	3 also for away, 4 for fileserver, 5 also for fileserver, 6
+	for fileserver away, 7 also for fileserver away, 8
+	for speeduser, 9 also for speeduser, 10 for speeduser away,
+	and 11 also for speeduser away.</p>
+
+
+	<h2>$GetINFO</h2>
+	
+	<p>To obtain detailed information about a specific user, the client may send,</p>
+	<blockquote>
+		$GetINFO <span class=variable>&lt;othernick&gt;</span> <span class=variable>&lt;nick&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;nick&gt;</span> is this sending client's nick.
+		<li><span class=variable>&lt;othernick&gt;</span> is the nick of the user that <span class=variable>&lt;nick&gt;</span> wants to know about.
+	</ul>
+	<p>The server must respond with exactly the <span class=command>$MyINFO</span> command sent
+	by <span class=variable>&lt;othernick&gt;</span> to the server.  I don't know what to do if
+	<span class=variable>&lt;othernick&gt;</span> has not sent a <span class=command>$MyINFO</span> command
+	(perhaps he would have never been listed in <span class=command>$GetNickList</span>, in which case the command
+	could be rejected).  I don't know what to do if <span class=variable>&lt;othernick&gt;</span>
+	doesn't exist.</p>
+
+
+	<h2>$ConnectToMe</h2>
+
+	<p>The client may send <span class=command>$ConnectToMe</span> to cause a peer to initiate a
+	peer-to-peer connection for the purpose of transfering data.</p>
+	<blockquote>
+		$ConnectToMe <span class=variable>&lt;remoteNick&gt;</span> <span class=variable>&lt;senderIp&gt;</span>:<span class=variable>&lt;senderPort&gt;</span>
+	</blockquote>
+    
+	<ul>
+		<li><span class=variable>&lt;senderIp&gt;</span> and <span class=variable>&lt;senderPort&gt;</span> are the host and port that the client wishes <span class=variable>&lt;remoteNick&gt;</span> to connect to.
+		<li><span class=variable>&lt;remoteNick&gt;</span> is the remote user that should initiate the connection.
+	</ul>
+
+	<p>The server sends this message unaltered to <span class=variable>&lt;remotenick&gt;</span>.
+	<span class=variable>&lt;remotenick&gt;</span> must open a TCP connection to 
+	<span class=variable>&lt;senderIp&gt;</span>:<span class=variable>&lt;senderPort&gt;</span>.</p>
+
+
+	<h2>$MultiConnectToMe</h2>
+
+	<p>The client may send this instead of the <span class=command>$ConnectToMe</span> to
+	cause a peer on another hub to initiate a peer-to-peer
+	connection for the purpose of transfering data.  This is
+	an extension for multiple hubs, which I'm not worried about yet.</p>
+	<blockquote>
+		$MultiConnectToMe <span class=variable>&lt;nick&gt;</span> <span class=variable>&lt;senderIp&gt;</span>:<span class=variable>&lt;senderPort&gt;</span> <span class=variable>&lt;linkedserverip&gt;</span>:<span class=variable>&lt;linkedserverport&gt;</span>
+	</blockquote>
+
+
+	<h2>$RevConnectToMe</h2>
+
+	<p>A passive client may send this to cause a peer to send a <span class=command>$ConnectToMe</span> back.</p>
+	<blockquote>
+		$RevConnectToMe <span class=variable>&lt;nick&gt;</span> <span class=variable>&lt;remoteNick&gt;</span>
+	</blockquote>
+	
+	<ul>
+		<li><span class=variable>&lt;nick&gt;</span> is the sender of the message.
+		<li><span class=variable>&lt;remoteNick&gt;</span> is the user which should send to
+		<span class=command>$ConnectToMe</span>.
+	</ul>
+    
+	<p>The server must send this message unmodified to <span class=variable>&lt;remoteNick&gt;</span>.
+	If <span class=variable>&lt;remoteNick&gt;</span> is an active client, it must send 
+	a <span class=command>$ConnectToMe</span> to <span class=variable>&lt;nick&gt;</span>.
+	If not, it must ignore the message.
+	<font color=red>XXX DC++ does not ignore the message, but replies with a $RevConnectToMe.
+	now they know they are both passive, and no further connection attempts have to be made. /sed</font>
+	</p>
+
+
+	<h2>$To</h2>
+
+    <p>The client may send <span class=command>$To</span> to send a private message to a peer.</p>
+	<blockquote>
+		$To: <span class=variable>&lt;othernick&gt;</span> From: <span class=variable>&lt;nick&gt;</span> $&lt;<span class=variable>&lt;nick&gt;</span>&gt; <span class=variable>&lt;message&gt;</span>
+	</blockquote>
+	
+	<ul>
+		<li><span class=variable>&lt;othernick&gt;</span> is the peer who should receive the message.
+		<li><span class=variable>&lt;nick&gt;</span> is the sender's nick (both instances).
+		<li><span class=variable>&lt;message&gt;</span> is the text of the message (spaces permitted).
+	</ul>
+
+	<p>The server must pass the message unmodified to client
+	<span class=variable>&lt;othernick&gt;</span> which must display the message to the
+	user.</p>
+
+
+	<h2>&lt;&gt;</h2>
+
+	<p>The client may send <span class=variable>&lt;&gt;</span> to send a public message to all hub users.</p>
+	<blockquote>
+		&lt;<span class=variable>&lt;nick&gt;</span>&gt; <span class=variable>&lt;message&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;nick&gt;</span> is this sender's nick.
+	</ul>
+
+    <p>The server must pass the message unmodified to all other clients	(not <span class=variable>&lt;nick&gt;</span>).
+	All other clients must display the message to that user.</p>
+
+	<font color=red>XXX this is incorrect. the hub does send the message back to the creator /sed</font><br>
+
+
+	<h2>$Quit</h2>
+
+	<p>The client may send <span class=command>$Quit</span> to indicate to the hub and to all other
+	users that it is disconnecting from the hub.</p>
+	<font color=red>XXX it's unsure if any client has ever sent $Quit at all.. don't do it, the hub won't
+	understand you<br>
+	the hub however must send $Quit to all connected clients whenever a user disconnects /sed</font><br>
+
+	<blockquote>
+		$Quit <span class=variable>&lt;nick&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;nick&gt;</span> is the sender's nick.
+	</ul>
+
+	<p>The client must then close the socket.  The server must
+	send this message to all users <strike>when it is received from a client, or</strike>
+	when a client connection is lost.  Each client should remove
+	<span class=variable>&lt;nick&gt;</span> from its list of hub users.</p>
+
+
+    <h2>$OpForceMove</h2>
+
+	<p>An op may send a <span class=command>$OpForceMove</span> to cause a client to move to a different server.</p>
+	<blockquote>
+		$OpForceMove $Who:<span class=variable>&lt;victimNick&gt;</span>$Where:<span class=variable>&lt;newIp&gt;</span>$Msg:<span class=variable>&lt;reasonMsg&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;victimNick&gt;</span> is the nick that will be asked to move.
+		<li><span class=variable>&lt;newHub&gt;</span> is the IP address (and optional colon-separated port) of another hub that the user should move to.
+		<li><span class=variable>&lt;reasonMsg&gt;</span> is the reason provided to <span class=variable>&lt;victimNick&gt;</span>.
+	</ul>
+
+	<p>On receiving this, the server must send to <span class=variable>&lt;victimNick&gt;</span>,</p>
+	<blockquote>
+		$ForceMove <span class=variable>&lt;newIp&gt;</span><br>
+		$To: <span class=variable>&lt;victimNick&gt;</span> From: <span class=variable>&lt;senderNick&gt;</span> $&lt;<span class=variable>&lt;senderNick&gt;</span>&gt; You are being re-directed to <span class=variable>&lt;newHub&gt;</span> because: <span class=variable>&lt;reasonMsg&gt;</span>
+	</blockquote>
+    
+	<ul>
+		<li><span class=variable>&lt;senderNick&gt;</span> is the nick that sent the
+		<span class=command>$OpForceMove</span>.
+	</ul>
+
+	<p>In addition to displaying the message, <span class=variable>&lt;victimNick&gt;</span> must
+	disconnect from the server and connect to <span class=variable>&lt;newIp&gt;</span>.  The server
+	should not disconnect the client.  I'm not sure if the client should
+	send <span class=command>$Quit</span> or if it should simply close the socket.</p>
+
+	
+    <h2>$Kick</h2>
+
+	<p>Ops may send <span class=command>$Kick</span> to cause the hub to disconnect a user.</p>
+	<blockquote>
+		$Kick <span class=variable>&lt;victimNick&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;victimNick&gt;</span> is the nick of the user to disconnect.
+	</ul>
+
+	<p>The server must disconnect <span class=variable>&lt;victimNick&gt;</span>.  Is the user
+	notified?  I thought there was a "reason" message associated 
+	with kicking.</p>
+
+	<font color=red>XXX no, there is no reason. this is handled by the kicking client. strange that
+	OpForceMove has one though. /sed</font>
+
+
+    <h2>$Search - Active clients</h2>
+
+	<p>Clients are either "active", indicating they are on the Internet
+	and can receive data directly from peers, or "passive", in which case
+	they can communicate only through the existing connection to the
+	server.  To perform a search, an active client can send,</p>
+
+	<blockquote>
+		$Search <span class=variable>&lt;clientip&gt;</span>:<span class=variable>&lt;clientport&gt;</span> <span class=variable>&lt;searchstring&gt;</span><br>
+		i.e. $Search 64.78.55.32:412 T?T?500000?1?madonna$ray
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;clientip&gt;</span> is this client's IP address.
+		<li><span class=variable>&lt;clientport&gt;</span> is a UDP port on which the client is listening for responses.
+		<li><span class=variable>&lt;searchstring&gt;</span> is a string describing the file the client is searching for.
+	</ul>
+    
+	<p><span class=variable>&lt;searchstring&gt;</span> is made up of</p>
+	<blockquote>
+		<span class=variable>&lt;sizerestricted&gt;</span>?<span class=variable>&lt;isminimumsize&gt;</span>?<span class=variable>&lt;size&gt;</span>?<span class=variable>&lt;datatype&gt;</span>?<span class=variable>&lt;searchpattern&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;sizerestricted&gt;</span> is <span class=command>T</span> if the search should be restricted to files of a minimum or maximum size, otherwise <span class=command>F</span>.
+		<li><span class=variable>&lt;isminimumsize&gt;</span> is <span class=command>F</span> if <span class=variable>&lt;sizerestricted&gt;</span> is <span class=command>F</span> or if the size restriction places an upper limit on file size, otherwise <span class=command>T</span>.
+		<li><span class=variable>&lt;size&gt;</span> is the minimum or maximum size of the file to report (according to <span class=variable>&lt;isminimumsize&gt;</span>) if <span class=variable>&lt;sizerestricted&gt;</span> is <span class=command>T</span>, otherwise 0.
+		<li><span class=variable>&lt;datatype&gt;</span> restricts the search to files of a particular type.  It is an integer selected from:
+		<ul>
+			<li>1 for any file type
+			<li>2 for audio files ("mp3", "mp2", "wav", "au", "rm", "mid", "sm")
+			<li>3 for compressed files ("zip", "arj", "rar", "lzh", "gz", "z", "arc", "pak")
+			<li>4 for documents ("doc", "txt", "wri", "pdf", "ps", "tex")
+			<li>5 for executables ("pm", "exe", "bat", "com")
+			<li>6 for pictures ("gif", "jpg", "jpeg", "bmp", "pcx", "png", "wmf", "psd")
+			<li>7 for video ("mpg", "mpeg", "avi", "asf", "mov")
+			<li>8 for folders
+		</ul>
+
+		<li>
+			<span class=variable>&lt;searchpattern&gt;</span> is used other users to determine if any files match.
+			It is of the form:
+			<blockquote>
+				<span class=variable>&lt;term1&gt;</span>$<span class=variable>&lt;term2&gt;</span>$<span class=variable>&lt;term3&gt;</span>$...$
+			</blockquote>
+
+			where <span class=variable>&lt;term1&gt;</span>, <span class=variable>&lt;term2&gt;</span>,
+			... are search terms; normally, each search term is a space-delimited word entered by the
+			user.  Each search term	  is followed by a <span class=command>$</span>, and after the last
+			search term there is a total of two <span class=command>$</span>.
+			<font color=red>XXX ehe... searchstring _may_ contain as much $ as it likes, but _needs_
+			none after the last term /sed</font>
+		
+    </ul>
+
+	<p>The server must forward this message unmodified to all the
+	other users. See Active $SR for the client response.
+
+	<h2>$SR - Active search results</h2>
+	Every other user with one or more matching files
+	must send one UDP packet to <span class=variable>&lt;clientip&gt;</span>:<span class=variable>&lt;clientport&gt;</span> for each match
+	containing just the message,</p>
+    
+	<blockquote>
+		$SR <span class=variable>&lt;nick&gt;</span> <span class=variable>&lt;searchresponse&gt;</span> <span class=variable>&lt;hubip&gt;</span>[:<span class=variable>&lt;hubport&gt;]</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;nick&gt;</span> is the nick of the user with the file.
+		<li><span class=variable>&lt;hubip&gt;</span>:<span class=variable>&lt;hubport&gt;</span> are the 
+		hub ip and hub port (if not running on 411) <font color=red>XXX dc++ does not send port /sed</font>
+		
+	</ul>
+
+	<p><span class=variable>&lt;searchresponse&gt;</span> is made up of</p>
+	<blockquote>
+		<span class=variable>&lt;filenamewithpath&gt;</span>&#5;<span class=variable>&lt;filesizeinbytes&gt;</span> <span class=variable>&lt;current openslots&gt;</span>/<span class=variable>&lt;allopenslots&gt;</span>&#5;<span class=variable>&lt;hubname&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;filenamewithpath&gt;</span> is the location of the file on the remote client.
+		<li><span class=variable>&lt;filesizeinbytes&gt;</span> is the size of the file found.
+		<li><span class=variable>&lt;current openslots&gt;</span> is the number of free slots the remote client has available.
+		<li><span class=variable>&lt;allopenslots&gt;</span> is the total number of slots the remote client has available.
+		<li><span class=command>&#5;</span> is the ascii character 5.
+    </ul>
+	
+
+
+	<h2>$Search - Passive clients</h2>
+
+	<p>To search the network for files matching a search term, a passive client may send,</p>
+	<blockquote>
+		$Search Hub:<span class=variable>&lt;searchingNick&gt;</span> <span class=variable>&lt;searchstring&gt;</span>
+	</blockquote>
+
+	<p>The server must forward this message unmodified to all the other users. See Passive $SR for client response.
+
+	<h2>$SR - Passive search results</h2>
+	Every other user with one or more matching files must send
+	to the server,</p>
+
+	<blockquote>
+		$SR <span class=variable>&lt;resultNick&gt;</span> <span class=variable>&lt;filepath&gt;</span>&#5;<span class=variable>&lt;filesize&gt;</span> <span class=variable>&lt;freeslots&gt;</span>/<span class=variable>&lt;totalslots&gt;</span>&#5;<span class=variable>&lt;hubname&gt;</span> (<span class=variable>&lt;hubhost&gt;</span>[:<span class=variable>&lt;hubport&gt;</span>])&#5;<span class=variable>&lt;searchingNick&gt;</span>
+	</blockquote>
+
+	<ul>
+		<li><span class=variable>&lt;resultNick&gt;</span> is the nick of the user reporting the result.
+		<li><span class=variable>&lt;filepath&gt;</span> is the path and file name of the matching file on <span class=variable>&lt;resultNick&gt;</span>'s computer.  Eventually, <span class=variable>&lt;searchingNick&gt;</span> will pass this string unmodified to <span class=variable>&lt;resultNick&gt;</span> to download the file.
+		<li><span class=variable>&lt;filesize&gt;</span> is the integer size of the file in bytes.
+		<li><span class=variable>&lt;freeslots&gt;</span> and <span class=variable>&lt;totalslots&gt;</span> is <span class=variable>&lt;resultNick&gt;</span>'s number of free slots and total slots, respectively.
+		<li><span class=variable>&lt;hubname&gt;</span> is the name of the hub from which the query arrived.  
+		<li><span class=variable>&lt;hubhost&gt;</span> and <span class=variable>&lt;hubport&gt;</span> are the hostname and port of the hub as perceived by <span class=variable>&lt;resultNick&gt;</span> (if :<span class=variable>&lt;hubport&gt;</span> is omitted, it is taken to be 411). <font color=red>XXX hmz.. dc++ versions do not send the port, nmdc does (unless the hub is running on 411) /sed</font>
+		<li><span class=variable>&lt;searchingNick&gt;</span> is the nick that initiated the search and is the same as in the <span class=command>$Search</span> command.
+		<li><span class=command>&#5;</span> is the ascii character 5.
+	</ul>
+
+	The search result should be forwarded to <span class=variable>&lt;searchingNick&gt;</span>, but without the 
+	<span class=command>&#5;</span><span class=variable>&lt;searchingNick&gt;</span> at the end.
+
+
+	<h2>$MultiSearch</h2>
+
+	<p>This is takes the same parameters as <span class=command>$Search</span> (both active and
+	passive) and behaves exactly as <span class=command>$Search</span>, except the hub
+	must additionally pass the search request to the other hubs in
+	the cluster using the hub-to-hub <span class=command>$Search</span> command.</p>
+
+</body>
+</html>
+
+
+
+
+
+<!--
+     FILE ARCHIVED ON 14:15:41 Feb 25, 2004 AND RETRIEVED FROM THE
+     INTERNET ARCHIVE ON 20:53:45 Jan 19, 2013.
+     JAVASCRIPT APPENDED BY WAYBACK MACHINE, COPYRIGHT INTERNET ARCHIVE.
+
+     ALL OTHER CONTENT MAY ALSO BE PROTECTED BY COPYRIGHT (17 U.S.C.
+     SECTION 108(a)(3)).
+-->

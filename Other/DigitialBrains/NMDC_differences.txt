@@ -1,0 +1,29 @@
+Behavioral Differences between NMDC and DC++:
+
+Confirmed:
+	-NMDC responds to a blank, passive search with a private message to Vandel\Debug contructed as:
+		strftime(buf, 25, "%m/%d/%Y %I:%M:%S %p", localtime(&now)); //(almost, there are a couple of leading zeroes in there NMDC doesn't have)
+		privateMessage("Vandel\\Debug", "Error in wskToHub_DataArrival\r\nError: Invalid procedure call or argument\r\nExtra Data:  Time: " + string(buf));
+	-NMDC response to passive searches whilst passive; DC++ doesn't.
+	-NMDC always responds to the $Lock command, even if it's not at the appropriate place in the protocol.
+	-NMDC has no extended description tag.
+	-NMDC sends a version of 1.0091 as opposed to 1,0091 (US vs. European thousands place separators).
+	-NMDC always returns up to 5 search results, whereas DC++ responds with up to 5 or 10, in passive and active modes respectively.
+	-NMDC doesn't support the $Supports command; DC++ does.
+	-NMDC checks for key validity and closes the connection if it's invalid.
+	-NMDC makes a random lock (length 80 to 134 according to that document, seems to work okay); DC++ uses EXTENDEDPROTOCOLABCABCABCABCABCABC.
+	-NMDC uses a random Pk (length 16); DC++ uses "DCPLUSPLUS" VERSIONSTRING "ABCABC".
+	-NMDC doesn't support .bz2 filelists (doesn't request them, will presumably respond with a File not available should someone request one).
+	-NMDC appends the hub port, if not 411, to the hub IP in its search results.
+	-NMDC won't respond to a search query that contains a term that begins with "-".
+	-NMDC doesn't support DC++'s extra slots for filelists & small files.
+	-NMDC doesn't support ZBlock downloading (but, then again, neither does stock DC++).
+	-NMDC responds to a different set of file extentions based on specified search type.
+Unconfirmed:
+	-NMDC only looks after the last ? in a search query due to its parsing method.
+	-NMDC sorts search query results, whereas DC++ doesn't.
+
+
+
+by BlackClaw (2003-04), creator of BCDC++
+http://utrum.dyndns.org:8000/

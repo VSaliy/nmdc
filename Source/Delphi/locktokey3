@@ -1,0 +1,44 @@
+//New Delphi Lock2Key ( working perfectly )
+ public
+   { Public declarations }
+   function Key(iLock: String; magic: byte): String;
+   function ns(eightbit: byte): byte;
+//The above declarations must be placed under the public diclarations
+function TF_Dark_Deeds.Key(iLock: String; magic: byte): String;
+var tmp,Lock : string;
+    i : integer;
+    a,b : byte;
+begin
+ if not (pos(' Pk',ilock) = 0) then
+  lock := copy(ilock,1,pos(' Pk',ilock)-1)
+ else lock := ilock;
+ 
+ a := ord(lock[length(lock)-1]);
+ b := ord(lock[length(lock)]);
+ tmp := chr(ns(ord(lock[1]) xor a xor b xor magic));
+ 
+ for i := 2 to length(lock) do
+ begin
+  tmp := tmp + chr(ns(ord(lock[i]) xor ord(lock[i-1])));
+ end;
+ 
+ for i := 1 to length(tmp) do
+ begin
+  case ord(tmp[i]) of
+   0    : result := concat(result,'/%DCN000%/');
+   5    : result := concat(result,'/%DCN005%/');
+   36   : result := concat(result,'/%DCN036%/');
+   96   : result := concat(result,'/%DCN096%/');
+   124  : result := concat(result,'/%DCN124%/');
+   126  : result := concat(result,'/%DCN126%/');
+   else   result := concat(result,tmp[i]);
+  end;
+ end;
+end;
+ 
+function TF_Dark_Deeds.ns(eightbit: byte): byte;
+begin
+ result := (eightbit shl 4) or (eightbit shr 4);
+end;
+//Use the function like this -> key:=LockToKey(Lock,5); // just put a 5 i don't know why
+//by the way tnx to a friend of mine i posted this function

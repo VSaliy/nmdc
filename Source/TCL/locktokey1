@@ -1,0 +1,36 @@
+# by Cez
+
+proc lock2key { lock } {
+   set key ""
+   set temp ""
+   set length [string length $lock]
+
+   append temp [asc [expr [chr [string index $lock 0]] ^ [chr [string index $lock [expr $length-1]]] ^ [chr [string index $lock [expr $length-2]]] ^ 5]]
+
+   for { set x 1 } { $x<$length } { incr x } {
+           append temp [asc [expr [chr [string index $lock $x]] ^ [chr [string index $lock [expr $x-1]]]]]
+   }
+
+   for { set x 0 } { $x<$length } { incr x } {
+           append key [asc [expr ([chr [string index $temp $x]] << 4) & 240 | ([chr [string index $temp $x]] >> 4) & 15]]
+        }
+
+   regsub -all -- {\0} $key "/%DCN000%/" key
+   regsub -all -- {\^E} $key "/%DCN005%/" key
+   regsub -all -- {\$} $key "/%DCN036%/" key
+   regsub -all -- {\`} $key "/%DCN096%/" key
+   regsub -all -- {\|} $key "/%DCN124%/" key
+   regsub -all -- {\~} $key "/%DCN126%/" key
+   return $key
+}
+
+proc asc i {
+    if { $i<0 || $i>255 } { error "asc:Integer out of range 0-255" }
+    return [format %c $i ]
+}
+
+proc chr { c } {
+    set v 0
+    scan $c %c v
+    return $v
+}
