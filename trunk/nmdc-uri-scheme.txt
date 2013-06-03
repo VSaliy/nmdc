@@ -30,8 +30,6 @@ Scheme syntax:
 
 Scheme semantics:
 
-   1. Generic Semantics
-
    The 'dchub' URI specifies a hub within the Direct Connect (DC) network. The URI may also indicate a user and a file or directory that they share.
 
    A Neo-Modus Direct Connect (NMDC) client, given an URL, ought to connect to the specified address with the appropriate protocol commands and sequence. 

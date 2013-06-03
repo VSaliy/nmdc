@@ -25,6 +25,11 @@ and older versions can be downloaded from
 $URL: https://nmdc.svn.sourceforge.net/svnroot/nmdc/trunk/NMDC.txt $. 
 This version corresponds to $Revision: 25 $.
 
+=== Version 1.4
+UNRELEASED
+
+* Added $SetIcon extension
+
 === Version 1.3
 Fredrik Ullner <ullner@gmail>, 2013-03-09
 
@@ -1726,6 +1731,19 @@ Examples:
  $FailOver|
  $FailOver example.com:412|
  $FailOver example.com,example.org:5555,adc://example.net:6666|
+====
+
+==== Hub icon
+ $SetIcon image_uri|
+
+This feature is used to indicate an icon to use for the hub. The image_uri is an URI linking to the image that should be used. The URI is specified with "http://", "https://" or "www.".
+
+Hubs that send this also support HubINFO.
+
+Examples:
+====
+ $SetIcon www.example.com/images/myimage.ico|
+ $SetIcon http://hub.example.org/img/image.ico|
 ====
 
 == Examples
