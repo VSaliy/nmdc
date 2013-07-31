@@ -1,4 +1,4 @@
-﻿(last updated 2013-06-03)
+﻿(last updated 2013-07-31)
 
 Resource Identifier (RI) Scheme name: dchub 
 Status: Permanent
@@ -58,31 +58,37 @@ Encoding considerations:
 
    3. Normalization
 
-   The URI SHOULD be normalized according to RFC 3986 section 6.2.2, with below exceptions.
+   The URI SHOULD be syntax-based normalized according to RFC 3986 section 6.2.2, with below exceptions.
 
    Tokens (such as "." and "..") SHALL follow the security considerations of this document.
 
    Trailing slashes ("/") SHOULD NOT be normalized.
 
+   The URI SHALL use scheme-based normalization according to RFC 3986 section 6.2.3. I.e., the following URIs are equivalent:
+         dchub://example.com
+		 dchub://example.com/
+		 dchub://example.com:411
+		 dchub://example.com:411/
+
 Applications/protocols that use this scheme name:
 
    1. Generic
 
-   Most Direct Connect clients support the 'dchub' URI scheme (or parts of it).
+   Most Direct Connect clients support the 'dchub' URI scheme (or parts of it). The 'dchub' URI scheme is used by hub lists to indicate the address of a hub.
 
-   All implementations that support the file-path syntax support the user syntax.
+   Implementations that support the file-path syntax implicitly support the user syntax.
 
-   All implementations that support the user syntax support the generic syntax.
+   Implementations that support the user syntax implicitly support the generic syntax.
 
    2. File-path Syntax Implementations
 
-   The implementations that support the URI including the file-path syntax are:
+   Client implementations that support the URI including the file-path syntax are:
       AirDC++ and derivatives
       Neo-Modus Direct Connect client
      
    3. User Syntax Implementations
 
-   The implementations that support the URI including the user syntax are:
+   Client implementations that support the URI including the user syntax are:
       DC++ and derivatives
       Jucy
 
@@ -125,6 +131,7 @@ Security considerations:
    hub has relayed to them the IP and port to which they are connecting.
 
    2. URI Path Encoding
+
    Client software SHOULD verify that NMDC URI paths remain within
    shares by ensuring that "/", "\", ".", ":", "..", and other
    meaningful tokens either do not appear or appear only where they do
@@ -166,6 +173,7 @@ Author/Change controller:
    The registering party or a member of the NMDC project
 
 References:
-   http://nmdc.sourceforge.net/, http://en.wikipedia.org/wiki/Direct_Connect_(file_sharing) 
+   http://nmdc.sourceforge.net/, http://en.wikipedia.org/wiki/Direct_Connect_(file_sharing),
+   http://www.ietf.org/rfc/rfc3986 
 
 (file created 2013-02-08)
