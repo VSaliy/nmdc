@@ -1,7 +1,7 @@
-﻿(last updated 2013-07-31)
+﻿(last updated 2013-10-06)
 
 Resource Identifier (RI) Scheme name: dchub 
-Status: Permanent
+Status: Provisional
 
 Scheme syntax:
 
@@ -30,7 +30,7 @@ Scheme syntax:
 
 Scheme semantics:
 
-   The 'dchub' URI specifies a hub within the Direct Connect (DC) network. The URI may also indicate a user and a file or directory that they share.
+   The 'dchub' URI scheme specifies a hub within the Direct Connect (DC) network. The URI may also indicate a user and a file or directory that they share.
 
    A Neo-Modus Direct Connect (NMDC) client, given an URL, ought to connect to the specified address with the appropriate protocol commands and sequence. 
    
@@ -72,37 +72,30 @@ Encoding considerations:
 
 Applications/protocols that use this scheme name:
 
-   1. Generic
+   The 'dchub' URI scheme is intended to be used by applications that are 
+   using the NMDC protocol or are referencing NMDC hubs, users and files as network resources.
 
-   Most Direct Connect clients support the 'dchub' URI scheme (or parts of it). The 'dchub' URI scheme is used by hub lists to indicate the address of a hub.
+   Most Direct Connect applications support the 'dchub' URI scheme (or parts of it). 
+   Applications that are supporting the file-path syntax (implicitly) 
+   support the user syntax and applications that support the user syntax (implicitly) support the generic syntax.
 
-   Implementations that support the file-path syntax implicitly support the user syntax.
+   Applications and systems that are using the 'dchub' URI scheme include hub lists (e.g. in XML and HTTP form), 
+   hub owners and operators (e.g. for redirecting and referencing other hubs), 
+   client implementations (spanning multiple operating systems) and more.
 
-   Implementations that support the user syntax implicitly support the generic syntax.
-
-   2. File-path Syntax Implementations
-
-   Client implementations that support the URI including the file-path syntax are:
-      AirDC++ and derivatives
-      Neo-Modus Direct Connect client
-     
-   3. User Syntax Implementations
-
-   Client implementations that support the URI including the user syntax are:
-      DC++ and derivatives
-      Jucy
+   Support for the 'dchub' URI scheme include the original NMDC client (1999).
 
 Interoperability considerations:
 
    1. Inconsistency of Hub and User Accessibility
 
-   NMDC hubs may impose constraints on connecting clients that NMDC URIs
+   NMDC hubs may impose constraints on connecting clients that 'dchub' URIs
    do not encode, including requirements to authenticate with a username
    and password, to advertise a share of a certain size or composition,
    or to originate from certain IP addresses. Similarly, a user named in
-   an NMDC URI might not be available to transfer a file, or have
+   an 'dchub' URI might not be available to transfer a file, or have
    removed the specified file from their share. Therefore, software
-   processing an NMDC URI SHOULD anticipate frequent failure.
+   processing an 'dchub' URI SHOULD anticipate frequent failure.
 
    2. File-Path
 
@@ -132,10 +125,10 @@ Security considerations:
 
    2. URI Path Encoding
 
-   Client software SHOULD verify that NMDC URI paths remain within
+   Client software SHOULD verify that 'dchub' URI paths remain within
    shares by ensuring that "/", "\", ".", ":", "..", and other
    meaningful tokens either do not appear or appear only where they do
-   not allow unintended behavior. Client software which translates NMDC
+   not allow unintended behavior. Client software which translates 'dchub'
    URIs directly into file system calls, especially, MUST disallow path
    components of "." and "..".
 
@@ -153,7 +146,7 @@ Security considerations:
 
    4. Semantic Attacks Confusing User and Path URI Elements
 
-   The user and path portions of NMDC URIs overlap in appearance
+   The user and path portions of 'dchub' URIs overlap in appearance
    sufficiently to allow malicious construction of URIs which
    deceive users into navigating to a URI to a client the share of which
    they would not intentionally view by embeddeding a string resembling
@@ -163,7 +156,7 @@ Security considerations:
    5. Generic URI Syntax Considerations
 
    RFC 3986 section 7 and in particular section 7.4, "Rare IP Address
-   Formats", applies to NMDC URIs.
+   Formats", applies to 'dchub' URIs.
 
 Contact:
    Registering party: Fredrik Ullner <ullner [at] gmail.com>
